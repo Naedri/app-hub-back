@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "jsonc",
+            "request": "launch",
+            "name": "Launch",
+            "program": "${workspaceRoot}/src/main.jsonc",
+        }
+    ]
+}

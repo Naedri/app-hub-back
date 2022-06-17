@@ -1,0 +1,21 @@
+{
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true,
+        "source.fixAll": true
+    },
+    "cSpell.ignorePaths": [
+        "node_modules", // this will ignore anything the node_modules directory
+        "**/node_modules", // the same for this one
+        "**/node_modules/**", // the same for this one
+        "vscode-extension", //
+        ".git", // Ignore the .git directory
+        "package-lock.json", // Ignore the package-lock.json file
+        "package.json", // Ignore the package.json file
+    ],
+    "cSpell.language": "en",
+    "cSpell.words": [
+    ],
+    "files.eol": "\n"
+}

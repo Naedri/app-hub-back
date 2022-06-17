@@ -1,0 +1,25 @@
+{
+    "artificialDelayMilliseconds": 5000,
+    "keepExistingTerminalsOpen": false,
+    "runOnStartup": true,
+    "terminals": [
+        {
+            "splitTerminals": [
+                {
+                    "name": "server",
+                    "commands": [
+                        "clear ; npm run start"
+                    ],
+                    "shouldRunCommands": false
+                },
+                {
+                    "name": "test",
+                    "commands": [
+                        "clear ; npm run test"
+                    ],
+                    "shouldRunCommands": false
+                }
+            ]
+        }
+    ]
+}
