@@ -18,11 +18,22 @@
                         "clear ; npm run test"
                     ],
                     "shouldRunCommands": false
-                },
+                }
+            ]
+        },
+        {
+            "splitTerminals": [
                 {
                     "name": "cmd",
                     "commands": [
                         "clear ; git status"
+                    ],
+                    "shouldRunCommands": true
+                },
+                {
+                    "name": "data",
+                    "commands": [
+                        "clear ; npx prisma studio"
                     ],
                     "shouldRunCommands": true
                 }
