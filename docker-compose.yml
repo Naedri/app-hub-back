@@ -1,0 +1,38 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+
+  nest-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-server
+    env_file:
+      - .env
+    depends_on:
+      - nest-postgres
+    networks:
+      - api-auth
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    restart: always
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  nest-postgres:
+    container_name: nest-postgres
+    env_file:
+      - .env
+    image: postgres:13
+    networks:
+      - api-auth
+    ports:
+      - ${CONTAINER_PORT_DB}:${CONTAINER_PORT_DB}
+    restart: always
+    volumes:
+      - nest-postgres:/var/lib/postgresql/data
+
+networks:
+ api-auth:
