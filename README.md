@@ -71,8 +71,20 @@ You can see the associated **pgsql** commands at the following files : *prisma\m
 
 ## Architecture of the code 
 
-**Modules:** used to organize the code and split features into logical reusable units. Grouped TypeScript files are decorated with “@Module” decorator which provides metadata that NestJs makes use of to organize the application structure.
+| Folder                   | Purpose                                                      |
+| ------------------------ | ------------------------------------------------------------ |
+| `app.controller.ts`      | A basic controller with a single route.                      |
+| `app.controller.spec.ts` | The unit tests for the controller.                           |
+| `app.module.ts`          | The root module of the application.                          |
+| `app.service.ts`         | A basic service with a single method.                        |
+| `main.ts`                | The entry file of the application which uses the core function `NestFactory` to create a Nest application instance. |
 
-**Providers:** also called services, which are designed to abstract any form of complexity and logic. Providers can be created and injected into controllers or other providers.
+For nestJS project, in general : 
++ **Modules:** used to organize the code and split features into logical reusable units. Grouped TypeScript files are decorated with “@Module” decorator which provides metadata that NestJs makes use of to organize the application structure.
++ **Providers:** also called services, which are designed to abstract any form of complexity and logic. Providers can be created and injected into controllers or other providers.
++ **Controllers:** responsible for handling incoming requests and returning appropriate responses to the client-side of the application (for example call to the API).
 
-**Controllers:** responsible for handling incoming requests and returning appropriate responses to the client-side of the application (for example call to the API).
+## API documentation
+
+http://localhost:3000/api
+
