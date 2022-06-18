@@ -13,9 +13,12 @@
         ".git", // Ignore the .git directory
         "package-lock.json", // Ignore the package-lock.json file
         "package.json", // Ignore the package.json file
+        ".env", // Ignore the .env file
+        ".env.example", // Ignore the .env file
     ],
     "cSpell.language": "en",
     "cSpell.words": [
+        "nestjs"
     ],
     "files.eol": "\n"
 }
