@@ -7,31 +7,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model APPLICATION {
-  id           Int            @id @default(autoincrement())
-  name         String         @unique @db.VarChar
-  url          String?        @db.VarChar
-  SUBSCRIPTION SUBSCRIPTION[]
+//https://www.sqlstyle.guide
+//https://www.prisma.io/docs/concepts/components/prisma-client/working-with-prismaclient/use-custom-model-and-field-names#using-map-and-map-to-rename-fields-and-models-in-the-prisma-client-api
+// model name -> PascalCas
+// field name -> camelCase
+
+model Application {
+  id            Int            @id @default(autoincrement())
+  name          String         @unique @db.VarChar
+  url           String?        @db.VarChar
+  subscriptions Subscription[]
+
+  @@map("applications")
 }
 
-model SUBSCRIPTION {
-  id          Int         @id @default(autoincrement())
-  user_id     Int
-  app_id      Int
-  APPLICATION APPLICATION @relation(fields: [app_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  USERS       USERS       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model Subscription {
+  id           Int         @id @default(autoincrement())
+  userId       Int         @map("user_id")
+  appId        Int         @map("app_id")
+  applications Application @relation(fields: [appId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users        User        @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("subscriptions")
 }
 
-model USERS {
-  id           Int            @id @default(autoincrement())
-  email        String         @unique @db.VarChar
-  password     String?        @db.VarChar
-  firstname    String?        @db.VarChar
-  lastname     String?        @db.VarChar
-  role         Role           @default(CLIENT)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @default(now()) @updatedAt
-  SUBSCRIPTION SUBSCRIPTION[]
+model User {
+  id            Int            @id @default(autoincrement())
+  email         String         @unique @db.VarChar
+  password      String?        @db.VarChar
+  firstName     String?        @map("first_name") @db.VarChar
+  lastName      String?        @map("last_name") @db.VarChar
+  role          Role           @default(CLIENT)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @default(now()) @updatedAt @map("updated_at")
+  subscriptions Subscription[]
+
+  @@map("users")
 }
 
 enum Role {
