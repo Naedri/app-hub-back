@@ -3,6 +3,7 @@ import { Role } from '@prisma/client';
 // database product seed
 const dbUser = process.env.SEED_USER; // admin email
 const dbPassword = process.env.SEED_PASSWORD; // admin password
+const dbPasswordAlt = process.env.SEED_PASSWORD_ALT; // non admin password
 
 type MockUser = {
   email: string;
@@ -16,11 +17,7 @@ const mockUsers: MockUser[] = [
   {
     email: 'alice1@mms.io',
     firstName: 'Alice',
-    password: 'changeMe',
-  },
-  {
-    email: 'bob1@mms.io',
-    firstName: 'Bob',
+    password: dbPasswordAlt,
   },
   {
     email: dbUser,
