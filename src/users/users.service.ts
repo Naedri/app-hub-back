@@ -6,7 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async createUser(user: {
+  async create(user: {
     email: string;
     password: string;
     role: Role;
@@ -20,7 +20,7 @@ export class UsersService {
     return result;
   }
 
-  async getUserByEmail(email: string): Promise<User | undefined> {
+  async getByEmail(email: string): Promise<User | undefined> {
     let user: User | undefined;
     try {
       user = await this.prisma.user.findUnique({ where: { email } });
@@ -30,7 +30,7 @@ export class UsersService {
     return user;
   }
 
-  async getUserById(userId: number): Promise<User | undefined> {
+  async getById(userId: number): Promise<User | undefined> {
     let user: User | undefined;
     try {
       user = await this.prisma.user.findUnique({ where: { id: userId } });

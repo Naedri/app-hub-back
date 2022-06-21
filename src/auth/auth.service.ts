@@ -22,7 +22,7 @@ export class AuthService {
   ) {}
 
   async login(email: string, pwd: string): Promise<Auth> {
-    const user = await this.userService.getUserByEmail(email);
+    const user = await this.userService.getByEmail(email);
 
     if (!user) {
       throw new NotFoundException(`No user found for email: ${email}`);
@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   async register(email: string, pwd: string): Promise<UserNotAuth> {
-    const emailExists = await this.userService.getUserByEmail(email);
+    const emailExists = await this.userService.getByEmail(email);
     if (emailExists) {
       throw new NotAcceptableException('Email already exists');
     }
@@ -49,7 +49,7 @@ export class AuthService {
     }
     const hashedPwd = await this.hash(pwd);
 
-    const user = await this.userService.createUser({
+    const user = await this.userService.create({
       email: email,
       password: hashedPwd,
       role: Role.CLIENT,
@@ -62,7 +62,7 @@ export class AuthService {
   }
 
   async validateUser(userId: string): Promise<User> {
-    return this.userService.getUserById(parseInt(userId, Config.saltRounds));
+    return this.userService.getById(parseInt(userId, Config.saltRounds));
   }
 
   checkPassword(pwd: string): boolean {
