@@ -8,6 +8,7 @@ import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { UserAuth } from './entities/user-auth.entity';
+import { User } from '@prisma/client';
 
 // purposes : retrieving an user and verifying the password
 @Injectable()
@@ -29,10 +30,15 @@ export class AuthService {
       throw new UnauthorizedException('Invalid password');
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...result } = user;
     const accessToken = this.jwtService.sign({
       userId: user.id,
     });
     return { accessToken, ...result };
+  }
+
+  async validateUser(userId: string): Promise<User> {
+    return await this.userService.getUserById(parseInt(userId, 10));
   }
 }
