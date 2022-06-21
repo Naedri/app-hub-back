@@ -1,14 +1,17 @@
 import {
   Injectable,
+  NotAcceptableException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
-import { User } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 import { Auth } from './entities/auth.entity';
+import { Config } from 'config';
+import { UserNotAuth } from 'src/users/entities/user-auth.entity';
 
 // purposes : retrieving an user and verifying the password
 @Injectable()
@@ -36,7 +39,37 @@ export class AuthService {
     return { accessToken };
   }
 
+  async register(email: string, pwd: string): Promise<UserNotAuth> {
+    const emailExists = await this.userService.getUserByEmail(email);
+    if (emailExists) {
+      throw new NotAcceptableException('Email already exists');
+    }
+    if (!this.checkPassword(pwd)) {
+      throw new NotAcceptableException('Password length incorrect');
+    }
+    const hashedPwd = await this.hash(pwd);
+
+    const user = await this.userService.createUser({
+      email: email,
+      password: hashedPwd,
+      role: Role.CLIENT,
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = user;
+
+    return result;
+  }
+
   async validateUser(userId: string): Promise<User> {
-    return await this.userService.getUserById(parseInt(userId, 10));
+    return this.userService.getUserById(parseInt(userId, Config.saltRounds));
+  }
+
+  checkPassword(pwd: string): boolean {
+    return pwd.length > 6 && pwd.length < 16;
+  }
+
+  async hash(str: string, rounds = Config.saltRounds): Promise<string> {
+    return hash(str, rounds);
   }
 }

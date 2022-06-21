@@ -13,3 +13,13 @@ export class UserAuth implements IUserAuth, Auth {
   updatedAt: Date;
   accessToken: string;
 }
+
+export class UserNotAuth implements IUserAuth {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: Role;
+  createdAt: Date;
+  updatedAt: Date;
+}
