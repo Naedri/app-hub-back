@@ -13,22 +13,22 @@
                     "shouldRunCommands": true
                 },
                 {
-                    "name": "test",
-                    "commands": [
-                        "clear ; npm run test"
-                    ],
-                    "shouldRunCommands": false
-                }
-            ]
-        },
-        {
-            "splitTerminals": [
-                {
                     "name": "cmd",
                     "commands": [
                         "clear ; git status"
                     ],
                     "shouldRunCommands": true
+                },
+            ]
+        },
+        {
+            "splitTerminals": [
+                {
+                    "name": "test",
+                    "commands": [
+                        "clear ; npm run test"
+                    ],
+                    "shouldRunCommands": false
                 },
                 {
                     "name": "data",
