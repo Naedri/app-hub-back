@@ -1,5 +1,5 @@
 import { Role, User } from '@prisma/client';
-import { Auth } from './auth.entity';
+import { Auth } from 'src/auth/entities/auth.entity';
 
 type IUserAuth = Omit<User, 'password'>; // User without password
 
