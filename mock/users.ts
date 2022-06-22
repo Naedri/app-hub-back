@@ -1,12 +1,10 @@
-import { Role } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 import { hash } from 'bcrypt';
 
-type MockUser = {
-  email: string;
-  firstName?: string;
-  password?: string;
-  role?: Role;
-};
+type MockUser = Omit<
+  User,
+  'id' | 'createdAt' | 'updatedAt' | 'firstName' | 'lastName'
+>;
 
 const config = {
   saltRounds: parseInt(process.env.HASH_ROUND || '10', 10),
@@ -23,9 +21,14 @@ function hashingPassword(user: MockUser): Promise<string> {
 
 const mockUsers: MockUser[] = [
   {
-    email: 'alice1@mms.io',
-    firstName: 'Alice',
+    email: 'alix@mms.io',
     password: config.dbPasswordAlt,
+    role: Role.CLIENT,
+  },
+  {
+    email: 'manix@mms.io',
+    password: config.dbPasswordAlt,
+    role: Role.CLIENT,
   },
   {
     email: config.dbUser,
