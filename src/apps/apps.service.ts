@@ -5,20 +5,23 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AppsService {
+  constructor(private prisma: PrismaService, private readonly logger: Logger) {
+    this.logger = new Logger(this.constructor.name);
+  }
+
   discoverOne(id: number) {
     throw new Error('Method not implemented.');
   }
   discoverAll() {
     throw new Error('Method not implemented.');
   }
-  constructor(private prisma: PrismaService) {}
 
   async create(createAppDto: CreateAppDto) {
     let result;
     try {
       result = await this.prisma.application.create({ data: createAppDto });
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
     }
     return result;
   }
@@ -28,7 +31,7 @@ export class AppsService {
     try {
       result = await this.prisma.application.findMany({});
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
     }
     return result;
   }
@@ -40,7 +43,7 @@ export class AppsService {
         where: { id },
       });
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
     }
     return result;
   }
@@ -53,7 +56,7 @@ export class AppsService {
         data: { ...updateAppDto },
       });
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
     }
     return result;
   }
@@ -65,7 +68,7 @@ export class AppsService {
         where: { id },
       });
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
     }
     return result;
   }

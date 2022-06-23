@@ -110,4 +110,5 @@ docker compose up
 
 ### TODO
 
-- update logger service with <https://stackoverflow.com/a/52907695>
+- resolve roles decorator
+- add relevant documentation on authentication

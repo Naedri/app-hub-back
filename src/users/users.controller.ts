@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Logger } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
 import { MyJwtAuthGuard } from 'src/auth/jwt.guard';
@@ -10,12 +10,7 @@ import { UsersService } from './users.service';
 @UseGuards(MyJwtAuthGuard)
 @ApiBearerAuth()
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly logger: Logger,
-  ) {
-    this.logger = new Logger(this.constructor.name);
-  }
+  constructor(private readonly usersService: UsersService) {}
 
   @Get('profile')
   async getProfile(@AuthUser() user: any): Promise<UserNotAuthEntity> {

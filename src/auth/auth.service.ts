@@ -21,7 +21,10 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly userService: UsersService,
     private readonly jwtService: JwtService,
-  ) {}
+    private readonly logger: Logger,
+  ) {
+    this.logger = new Logger(this.constructor.name);
+  }
 
   async login(email: string, pwd: string): Promise<TokenWrapEntity> {
     const user = await this.userService.getByEmail(email);
@@ -42,7 +45,7 @@ export class AuthService {
     };
     const accessToken = this.jwtService.sign(accessTokenContent);
 
-    Logger.log(
+    this.logger.log(
       `User with id : ${user.id} and email: ${email} has just logged.`,
     );
     return { accessToken };
@@ -69,7 +72,7 @@ export class AuthService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...result } = user;
 
-    Logger.log(
+    this.logger.log(
       `User with id : ${user.id} and email: ${user.email} has just registered.`,
     );
     return result;
@@ -91,7 +94,7 @@ export class AuthService {
     const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
     const isStrong = regex.test(pwd);
     if (!isStrong) {
-      Logger.warn(
+      this.logger.warn(
         'Password should contain at least one number and one special character, and between 8 and 16 characters.',
       );
     }

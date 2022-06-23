@@ -4,7 +4,9 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private readonly logger: Logger) {
+    this.logger = new Logger(this.constructor.name);
+  }
 
   async create(user: {
     email: string;
@@ -15,7 +17,7 @@ export class UsersService {
     try {
       result = await this.prisma.user.create({ data: user });
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
     }
     return result;
   }
@@ -25,7 +27,7 @@ export class UsersService {
     try {
       user = await this.prisma.user.findUnique({ where: { email } });
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
     }
     return user;
   }
@@ -35,7 +37,7 @@ export class UsersService {
     try {
       user = await this.prisma.user.findUnique({ where: { id: userId } });
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
     }
     return user;
   }
