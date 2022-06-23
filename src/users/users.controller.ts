@@ -1,17 +1,26 @@
-import { Controller, Get, UseGuards, Request } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { User } from '@prisma/client';
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { Controller, Get, UseGuards, Logger } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
+import { MyJwtAuthGuard } from 'src/auth/jwt.guard';
+import { UserNotAuthEntity } from './entities/user-auth.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
 @ApiTags('users')
+@UseGuards(MyJwtAuthGuard)
+@ApiBearerAuth()
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly logger: Logger,
+  ) {
+    this.logger = new Logger(this.constructor.name);
+  }
 
-  @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(@Request() req): Promise<User> {
-    return await this.usersService.getById(req.userId);
+  async getProfile(@AuthUser() user: any): Promise<UserNotAuthEntity> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = await this.usersService.getById(user.id);
+    return result;
   }
 }

@@ -8,21 +8,22 @@ import {
 import { compare, hash } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
-import { Role, User } from '@prisma/client';
-import { Auth } from './entities/auth.entity';
-import { UserNotAuth } from 'src/users/entities/user-auth.entity';
+import { Role } from '@prisma/client';
+import { TokenWrapEntity } from './entities/token-wrap.entity';
+import { TokenContentEntity } from './entities/token-content.entity';
+import { UserNotAuthEntity } from 'src/users/entities/user-auth.entity';
 import { ConfigService } from '@nestjs/config';
 
 // purposes : retrieving an user and verifying the password
 @Injectable()
 export class AuthService {
   constructor(
-    private configService: ConfigService,
-    private userService: UsersService,
-    private jwtService: JwtService,
+    private readonly configService: ConfigService,
+    private readonly userService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
-  async login(email: string, pwd: string): Promise<Auth> {
+  async login(email: string, pwd: string): Promise<TokenWrapEntity> {
     const user = await this.userService.getByEmail(email);
 
     if (!user) {
@@ -34,9 +35,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid password');
     }
 
-    const accessToken = this.jwtService.sign({
-      userId: user.id,
-    });
+    //we choose a property name of sub to hold our userId value to be consistent with JWT standards
+    const accessTokenContent: TokenContentEntity = {
+      sub: user.id,
+      role: user.role,
+    };
+    const accessToken = this.jwtService.sign(accessTokenContent);
 
     Logger.log(
       `User with id : ${user.id} and email: ${email} has just logged.`,
@@ -44,7 +48,7 @@ export class AuthService {
     return { accessToken };
   }
 
-  async register(email: string, pwd: string): Promise<UserNotAuth> {
+  async register(email: string, pwd: string): Promise<UserNotAuthEntity> {
     const emailExists = await this.userService.getByEmail(email);
     if (emailExists) {
       throw new NotAcceptableException('Email already exists');
@@ -71,11 +75,28 @@ export class AuthService {
     return result;
   }
 
-  async validateUser(userId: string): Promise<User> {
-    return this.userService.getById(parseInt(userId, 10));
+  async validateUser(id: number, role: Role): Promise<UserNotAuthEntity> {
+    const user = await this.userService.getById(id);
+    if (user.role !== role) {
+      throw new UnauthorizedException(
+        `User with id : ${user.id} used a token with an outdated role, it was : ${role} instead of ${user.role}.`,
+      );
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = user;
+    return result;
   }
 
   checkPassword(pwd: string): boolean {
-    return pwd.length > 6 && pwd.length < 16;
+    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+    const isStrong = regex.test(pwd);
+    if (!isStrong) {
+      Logger.warn(
+        'Password should contain at least one number and one special character, and between 8 and 16 characters.',
+      );
+    }
+    // TODO activate when in prod
+    // return isStrong;
+    return true;
   }
 }

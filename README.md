@@ -107,3 +107,7 @@ docker compose up
 
 - "Entities" : refer to units of composition of the overall system data. They normally represent business objects like: bank accounts, employees, products, etc. They can be used to persist the state of the system to a database. => _prisma.io_
 - "Data transfer objects" : are ephemeral collections of data transferred for a very specific purpose. For example, to display a list of products of a specific kind to an end user. You do not want to send all of the data that represents every product entity to the user, but only what is needed for this purpose. => _example.dto.ts_
+
+### TODO
+
+- update logger service with <https://stackoverflow.com/a/52907695>
