@@ -23,8 +23,8 @@ model Application {
 
 model Subscription {
   id           Int         @id @default(autoincrement())
-  userId       Int         @map("user_id")
   appId        Int         @map("app_id")
+  userId       Int         @map("user_id")
   applications Application @relation(fields: [appId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users        User        @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
