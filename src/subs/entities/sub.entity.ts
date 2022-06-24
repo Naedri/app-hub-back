@@ -1,12 +1,21 @@
-/**
- * As we do not change the type of Subscription from prisma
- * we will use the prisma one
- */
+import { Subscription } from '@prisma/client';
 
-// import { Subscription } from '@prisma/client';
+type ISubNoUser = Omit<Subscription, 'userId'>;
+type ISubNoApp = Omit<Subscription, 'appId'>;
+type ISub = { id: number };
 
-// export class SubEntity implements Subscription {
-//   id: number;
-//   userId: number;
-//   appId: number;
-// }
+export class SubNoUserEntity implements ISubNoUser {
+  id: number;
+  appId: number;
+}
+
+export class SubNoAppEntity implements ISubNoApp {
+  id: number;
+  userId: number;
+}
+
+export class SubEntity implements ISub {
+  id: number;
+  appId?: number;
+  userId?: number;
+}

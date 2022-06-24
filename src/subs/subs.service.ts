@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { PrismaService } from 'nestjs-prisma';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
-import { Subscription } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { SubEntity } from './entities/sub.entity';
+
 @Injectable()
 export class SubsService {
   constructor(private prisma: PrismaService, private readonly logger: Logger) {
@@ -12,8 +13,8 @@ export class SubsService {
   async getUserSubs(
     userId: number,
     subId: number = undefined,
-  ): Promise<Subscription[]> {
-    let result;
+  ): Promise<SubEntity[]> {
+    let result: SubEntity[];
     try {
       result = await this.prisma.subscription.findMany({
         where: {
@@ -22,14 +23,14 @@ export class SubsService {
           },
         },
       });
-      if (!!subId) {
+      if (subId) {
         result = [result[subId]];
       }
-      return result;
     } catch (error) {
       this.logger.error(error);
     }
-    return result;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return result.map(({ userId, ...item }) => item);
   }
 
   async create(createSubDto: CreateSubDto) {

@@ -18,6 +18,7 @@ import { Roles } from 'src/roles/decorators/roles.decorator';
 import { Role, Subscription } from '@prisma/client';
 import { UserNotAuthEntity } from 'src/users/entities/user-auth.entity';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
+import { SubEntity } from './entities/sub.entity';
 
 @Controller('subs')
 @ApiTags('subs')
@@ -28,24 +29,23 @@ export class SubsController {
 
   @Get('me')
   @Roles(Role.CLIENT)
-  mySubscriptions(
-    @AuthUser() user: UserNotAuthEntity,
-  ): Promise<Subscription[]> {
+  mySubscriptions(@AuthUser() user: UserNotAuthEntity): Promise<SubEntity[]> {
     return this.subsService.getUserSubs(user.id);
   }
 
   @Get('me/:id')
   @Roles(Role.CLIENT)
-  mySubscription(
+  async mySubscription(
     @AuthUser() user: UserNotAuthEntity,
     @Param('id') id: number,
-  ): Promise<Subscription> {
-    return this.subsService.getUserSubs(user.id, id)[0];
+  ): Promise<SubEntity> {
+    const result = await this.subsService.getUserSubs(user.id, id);
+    return result[0];
   }
 
   @Get('user/:id')
   @Roles(Role.ADMIN)
-  userSubscriptions(@Param('id') id: number): Promise<Subscription[]> {
+  userSubscriptions(@Param('id') id: number): Promise<SubEntity[]> {
     return this.subsService.getUserSubs(id);
   }
 
