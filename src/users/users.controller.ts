@@ -13,7 +13,9 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('profile')
-  async getProfile(@AuthUser() user: any): Promise<UserNotAuthEntity> {
+  async getProfile(
+    @AuthUser() user: UserNotAuthEntity,
+  ): Promise<UserNotAuthEntity> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...result } = await this.usersService.getById(user.id);
     return result;
