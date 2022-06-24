@@ -1,8 +1,8 @@
-import { App } from './app.entity';
+import { AppEntity } from './app.entity';
 
-type IAppNoUrl = Omit<App, 'url'>; // User without password
+type IAppNoUrl = Omit<AppEntity, 'url'>; // User without password
 
-export class AppNoUrl implements IAppNoUrl {
+export class AppNoUrlEntitiy implements IAppNoUrl {
   id: number;
   name: string;
 }

@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateAppDto } from './dto/create-app.dto';
 import { UpdateAppDto } from './dto/update-app.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { App } from './entities/app.entity';
+import { AppEntity } from './entities/app.entity';
 
 @Injectable()
 export class AppsService {
@@ -32,7 +32,7 @@ export class AppsService {
     return result;
   }
 
-  async findAll(): Promise<App[]> {
+  async findAll(): Promise<AppEntity[]> {
     let result;
     try {
       result = await this.prisma.application.findMany({});
@@ -42,7 +42,7 @@ export class AppsService {
     return result;
   }
 
-  async findOne(id: number): Promise<App> {
+  async findOne(id: number): Promise<AppEntity> {
     let result;
     try {
       result = await this.prisma.application.findUnique({

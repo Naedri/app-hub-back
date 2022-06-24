@@ -16,7 +16,7 @@ import { RolesGuard } from 'src/roles/guards/roles.guard';
 import { AppsService } from './apps.service';
 import { CreateAppDto } from './dto/create-app.dto';
 import { UpdateAppDto } from './dto/update-app.dto';
-import { AppNoUrl } from './entities/app-no-url.entity';
+import { AppNoUrlEntitiy } from './entities/app-no-url.entity';
 
 @Controller('apps')
 @ApiTags('apps')
@@ -26,30 +26,30 @@ export class AppsController {
   constructor(private readonly appsService: AppsService) {}
 
   @Get('discover')
-  discover(): Promise<AppNoUrl[]> {
+  discover(): Promise<AppNoUrlEntitiy[]> {
     return this.appsService.discoverAll();
   }
 
   @Get('discover/:id')
-  discoverOne(@Param('id') id: string): Promise<AppNoUrl> {
+  discoverOne(@Param('id') id: string): Promise<AppNoUrlEntitiy> {
     return this.appsService.discoverOne(+id);
   }
 
   @Get()
   @Roles(Role.ADMIN)
-  findAll(): Promise<AppNoUrl[]> {
+  findAll(): Promise<AppNoUrlEntitiy[]> {
     return this.appsService.findAll();
   }
 
   @Get(':id')
   @Roles(Role.ADMIN)
-  findOne(@Param('id') id: string): Promise<AppNoUrl> {
+  findOne(@Param('id') id: string): Promise<AppNoUrlEntitiy> {
     return this.appsService.findOne(+id);
   }
 
   @Post()
   @Roles(Role.ADMIN)
-  create(@Body() createAppDto: CreateAppDto): Promise<AppNoUrl> {
+  create(@Body() createAppDto: CreateAppDto): Promise<AppNoUrlEntitiy> {
     return this.appsService.create(createAppDto);
   }
 
@@ -58,7 +58,7 @@ export class AppsController {
   update(
     @Param('id') id: string,
     @Body() updateAppDto: UpdateAppDto,
-  ): Promise<AppNoUrl> {
+  ): Promise<AppNoUrlEntitiy> {
     return this.appsService.update(+id, updateAppDto);
   }
 
