@@ -5,6 +5,15 @@ import getMockApps from '../mock/apps';
 
 const prisma = new PrismaClient();
 
+async function subscription(userId, appId) {
+  const subData = await prisma.subscription.create({
+    data: { userId, appId },
+  });
+  Logger.log(
+    `User with id : ${subData.userId} has just subscribed to the app with id : ${subData.appId}.`,
+  );
+}
+
 async function main() {
   const mockApps = getMockApps();
   for (const app of mockApps) {
@@ -22,21 +31,23 @@ async function main() {
     );
   }
 
-  const appData = await prisma.application.findUnique({
+  let appData = await prisma.application.findUnique({
     where: { name: mockApps[0].name },
   });
-  const userData = await prisma.user.findUnique({
+  let userData = await prisma.user.findUnique({
     where: { email: mockUsers[0].email },
   });
-  const subData = await prisma.subscription.create({
-    data: {
-      userId: userData.id,
-      appId: appData.id,
-    },
+  subscription(userData.id, appData.id);
+
+  appData = await prisma.application.findUnique({
+    where: { name: mockApps[1].name },
   });
-  Logger.log(
-    `User with id : ${subData.userId} has just subscribed to the app with id : ${subData.appId}.`,
-  );
+  subscription(userData.id, appData.id);
+
+  userData = await prisma.user.findUnique({
+    where: { email: mockUsers[1].email },
+  });
+  subscription(userData.id, appData.id);
 }
 
 main()
