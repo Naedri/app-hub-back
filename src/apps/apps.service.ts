@@ -3,6 +3,7 @@ import { CreateAppDto } from './dto/create-app.dto';
 import { UpdateAppDto } from './dto/update-app.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AppEntity } from './entities/app.entity';
+import { AppNoUrlEntitiy } from './entities/app-no-url.entity';
 
 @Injectable()
 export class AppsService {
@@ -10,16 +11,16 @@ export class AppsService {
     this.logger = new Logger(this.constructor.name);
   }
 
-  async discoverOne(id: number) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { url, ...result } = await this.findOne(id);
+  async discoverOne(id: number): Promise<AppNoUrlEntitiy> {
+    const result = await this.findOne(id);
+    delete result?.url;
     return result;
   }
 
-  async discoverAll() {
+  async discoverAll(): Promise<AppNoUrlEntitiy[]> {
     const results = await this.findAll();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return results.map(({ url, ...item }) => item);
+    return results?.map(({ url, ...item }) => item);
   }
 
   async create(createAppDto: CreateAppDto) {

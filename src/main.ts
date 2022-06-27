@@ -24,7 +24,9 @@ async function bootstrap() {
 
   await app.listen(3000);
 
+  const url = await app.getUrl();
   const logger = new Logger('App');
-  logger.log(`Application is running on: ${await app.getUrl()}`);
+  logger.log(`Application is running on: ${url} .`);
+  logger.log(`Try the application at the following page : ${url}/api .`);
 }
 bootstrap();
