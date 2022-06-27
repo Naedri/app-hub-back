@@ -1,0 +1,39 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table applications {
+  id Int [pk, increment]
+  name String [unique, not null]
+  url String
+  subscriptions subscriptions [not null]
+}
+
+Table subscriptions {
+  id Int [pk, increment]
+  appId Int [not null]
+  userId Int [not null]
+  applications applications [not null]
+  users users [not null]
+}
+
+Table users {
+  id Int [pk, increment]
+  email String [unique, not null]
+  password String
+  firstName String
+  lastName String
+  role Role [not null, default: 'CLIENT']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  subscriptions subscriptions [not null]
+}
+
+Enum Role {
+  CLIENT
+  ADMIN
+}
+
+Ref: subscriptions.appId > applications.id [delete: No Action]
+
+Ref: subscriptions.userId > users.id [delete: No Action]
