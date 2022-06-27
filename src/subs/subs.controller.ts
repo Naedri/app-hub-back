@@ -36,11 +36,19 @@ export class SubsController {
 
   @Get('myAccess/:id')
   @Roles(Role.CLIENT)
-  myAccess(
+  async myAccess(
     @AuthUser() user: UserNotAuthEntity,
     @Param('id') id: number,
-  ): Promise<AccessEntity[]> {
-    return this.subsService.getUserAccess(user.id, id);
+  ): Promise<AccessEntity> {
+    return (await this.subsService.getUserAccess(user.id, id))?.pop();
+  }
+
+  @Get('me')
+  @Roles(Role.CLIENT)
+  async mySubscriptions(
+    @AuthUser() user: UserNotAuthEntity,
+  ): Promise<SubEntity[]> {
+    return this.subsService.getUserSubs(user.id);
   }
 
   @Get('me/:id')
@@ -49,8 +57,7 @@ export class SubsController {
     @AuthUser() user: UserNotAuthEntity,
     @Param('id') id: number,
   ): Promise<SubEntity> {
-    const result = await this.subsService.getUserSubs(user.id, id);
-    return result[0];
+    return (await this.subsService.getUserSubs(user.id, id))?.pop();
   }
 
   @Get('user/:id')

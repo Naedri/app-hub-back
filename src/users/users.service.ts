@@ -22,8 +22,8 @@ export class UsersService {
     return result;
   }
 
-  async getByEmail(email: string): Promise<User | undefined> {
-    let user: User | undefined;
+  async getByEmail(email: string): Promise<User> {
+    let user: User;
     try {
       user = await this.prisma.user.findUnique({ where: { email } });
     } catch (error) {
@@ -32,8 +32,8 @@ export class UsersService {
     return user;
   }
 
-  async getById(userId: number): Promise<User | undefined> {
-    let user: User | undefined;
+  async getById(userId: number): Promise<User> {
+    let user: User;
     try {
       user = await this.prisma.user.findUnique({ where: { id: userId } });
     } catch (error) {

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Application, Subscription } from '@prisma/client';
+import { Application } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
@@ -24,17 +24,20 @@ export class SubsService {
   ): Promise<AccessEntity[]> {
     let results: AccessEntity[];
     try {
-      const subscriptions: Subscription[] =
-        await this.prisma.subscription.findMany({
-          where: {
-            userId: {
-              equals: userId,
-            },
+      // eslint-disable-next-line prefer-const
+      let criteria: any = {
+        where: {
+          userId: {
+            equals: userId,
           },
-        });
-
+        },
+      };
       if (appId) {
-        results = [results[appId]];
+        criteria.where.appId = { equals: appId };
+      }
+      let subscriptions = await this.prisma.subscription.findMany(criteria);
+      if (appId) {
+        subscriptions = subscriptions?.filter((item) => item.appId == appId);
       }
       // renaming id by subId
       let temp = subscriptions?.map(({ id, ...item }) => ({
@@ -43,12 +46,13 @@ export class SubsService {
       }));
       // adding url
       temp = await Promise.all(
-        temp.map(async (item) => ({
+        temp?.map(async (item) => ({
           url: await this.getProtectedUrl(item.appId, item.userId),
           ...item,
         })),
       );
-      //removing userId
+      // removing userId
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       results = temp?.map(({ userId, ...item }) => item) as AccessEntity[];
     } catch (error) {
       this.logger.error(error);
@@ -67,7 +71,7 @@ export class SubsService {
       where: { id: appId },
     });
     // TODO add authorization for userId attribute to app.url
-    return app.url;
+    return app?.url;
   }
 
   /**
@@ -82,16 +86,18 @@ export class SubsService {
   ): Promise<SubEntity[]> {
     let results: SubEntity[];
     try {
-      results = await this.prisma.subscription.findMany({
+      // eslint-disable-next-line prefer-const
+      let criteria: any = {
         where: {
           userId: {
             equals: userId,
           },
         },
-      });
+      };
       if (subId) {
-        results = [results[subId]];
+        criteria.where.subId = { equals: subId };
       }
+      results = await this.prisma.subscription.findMany(criteria);
     } catch (error) {
       this.logger.error(error);
     }
