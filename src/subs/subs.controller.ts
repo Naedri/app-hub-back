@@ -18,7 +18,7 @@ import { Roles } from 'src/roles/decorators/roles.decorator';
 import { Role, Subscription } from '@prisma/client';
 import { UserNotAuthEntity } from 'src/users/entities/user-auth.entity';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
-import { SubEntity } from './entities/sub.entity';
+import { SubNoUserEntity } from './entities/sub.entity';
 import { AccessEntity } from './entities/access.entity';
 
 @Controller('subs')
@@ -45,7 +45,9 @@ export class SubsController {
 
   @Get('me')
   @Roles(Role.CLIENT)
-  mySubscriptions(@AuthUser() user: UserNotAuthEntity): Promise<SubEntity[]> {
+  mySubscriptions(
+    @AuthUser() user: UserNotAuthEntity,
+  ): Promise<SubNoUserEntity[]> {
     return this.subsService.getUserSubs(user.id);
   }
 
@@ -54,13 +56,13 @@ export class SubsController {
   async mySubscription(
     @AuthUser() user: UserNotAuthEntity,
     @Param('id') subId: number,
-  ): Promise<SubEntity> {
+  ): Promise<SubNoUserEntity> {
     return (await this.subsService.getUserSubs(user.id, +subId))?.pop();
   }
 
   @Get('user/:id')
   @Roles(Role.ADMIN)
-  userSubscriptions(@Param('id') id: number): Promise<SubEntity[]> {
+  userSubscriptions(@Param('id') id: number): Promise<SubNoUserEntity[]> {
     return this.subsService.getUserSubs(+id);
   }
 

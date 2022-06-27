@@ -7,4 +7,5 @@ export class AccessEntity implements IAccess {
   subId: number;
   appId: number;
   url: string;
+  accessUrlToken?: string;
 }

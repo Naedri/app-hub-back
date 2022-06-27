@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Application } from '@prisma/client';
+import { Application, Subscription } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
-import { SubEntity } from './entities/sub.entity';
+import { SubNoUserEntity } from './entities/sub.entity';
 import { AccessEntity } from './entities/access.entity';
 
 @Injectable()
@@ -81,8 +81,8 @@ export class SubsService {
   async getUserSubs(
     userId: number,
     subId: number = undefined,
-  ): Promise<SubEntity[]> {
-    let results: SubEntity[];
+  ): Promise<SubNoUserEntity[]> {
+    let results: Subscription[];
     try {
       // eslint-disable-next-line prefer-const
       let criteria: any = {
