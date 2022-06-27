@@ -38,16 +38,14 @@ export class SubsController {
   @Roles(Role.CLIENT)
   async myAccess(
     @AuthUser() user: UserNotAuthEntity,
-    @Param('id') id: number,
+    @Param('id') subId: number,
   ): Promise<AccessEntity> {
-    return (await this.subsService.getUserAccess(user.id, id))?.pop();
+    return (await this.subsService.getUserAccess(user.id, +subId))?.pop();
   }
 
   @Get('me')
   @Roles(Role.CLIENT)
-  async mySubscriptions(
-    @AuthUser() user: UserNotAuthEntity,
-  ): Promise<SubEntity[]> {
+  mySubscriptions(@AuthUser() user: UserNotAuthEntity): Promise<SubEntity[]> {
     return this.subsService.getUserSubs(user.id);
   }
 
@@ -55,15 +53,15 @@ export class SubsController {
   @Roles(Role.CLIENT)
   async mySubscription(
     @AuthUser() user: UserNotAuthEntity,
-    @Param('id') id: number,
+    @Param('id') subId: number,
   ): Promise<SubEntity> {
-    return (await this.subsService.getUserSubs(user.id, id))?.pop();
+    return (await this.subsService.getUserSubs(user.id, +subId))?.pop();
   }
 
   @Get('user/:id')
   @Roles(Role.ADMIN)
   userSubscriptions(@Param('id') id: number): Promise<SubEntity[]> {
-    return this.subsService.getUserSubs(id);
+    return this.subsService.getUserSubs(+id);
   }
 
   @Post()

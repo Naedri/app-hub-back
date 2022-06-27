@@ -15,12 +15,12 @@ export class SubsService {
   /**
    *
    * @param userId
-   * @param appId
+   * @param subId
    * @returns list of the url for each app the user has an appropriate subscription
    */
   async getUserAccess(
     userId: number,
-    appId: number = undefined,
+    subId: number = undefined,
   ): Promise<AccessEntity[]> {
     let results: AccessEntity[];
     try {
@@ -32,13 +32,11 @@ export class SubsService {
           },
         },
       };
-      if (appId) {
-        criteria.where.appId = { equals: appId };
+      if (subId !== undefined) {
+        criteria.where.id = { equals: subId as number };
       }
-      let subscriptions = await this.prisma.subscription.findMany(criteria);
-      if (appId) {
-        subscriptions = subscriptions?.filter((item) => item.appId == appId);
-      }
+      const subscriptions = await this.prisma.subscription.findMany(criteria);
+
       // renaming id by subId
       let temp = subscriptions?.map(({ id, ...item }) => ({
         subId: id,
@@ -94,8 +92,10 @@ export class SubsService {
           },
         },
       };
-      if (subId) {
-        criteria.where.subId = { equals: subId };
+      if (subId !== undefined) {
+        criteria.where.id = {
+          equals: subId as number,
+        };
       }
       results = await this.prisma.subscription.findMany(criteria);
     } catch (error) {
