@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Subscription } from '@prisma/client';
+import { Application, Subscription } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
@@ -42,10 +42,12 @@ export class SubsService {
         ...item,
       }));
       // adding url
-      temp = temp.map((item) => ({
-        url: this.getProtectedUrl(item.userId, item.appId),
-        ...item,
-      }));
+      temp = await Promise.all(
+        temp.map(async (item) => ({
+          url: await this.getProtectedUrl(item.appId, item.userId),
+          ...item,
+        })),
+      );
       //removing userId
       results = temp?.map(({ userId, ...item }) => item) as AccessEntity[];
     } catch (error) {
@@ -54,9 +56,20 @@ export class SubsService {
     return results;
   }
 
-  getProtectedUrl(userId: number, appId: number): string {
-    return 'www.google.com';
+  /**
+   *
+   * @param userId
+   * @param appId
+   * @returns url of the given appId with an authorization token
+   */
+  async getProtectedUrl(appId: number, userId: number): Promise<string> {
+    const app: Application = await this.prisma.application.findUnique({
+      where: { id: appId },
+    });
+    // TODO add authorization for userId attribute to app.url
+    return app.url;
   }
+
   /**
    *
    * @param userId
