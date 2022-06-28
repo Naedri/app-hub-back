@@ -84,6 +84,12 @@ For nestJS project, in general :
 - **Providers:** also called services, which are designed to abstract any form of complexity and logic. Providers can be created and injected into controllers or other providers.
 - **Controllers:** responsible for handling incoming requests and returning appropriate responses to the client-side of the application (for example call to the API).
 
+### Dependency Graph
+
+![Dependency Graph](README.assets/deps-graph.png)
+
+To update the above graph, run the following command : `npm run doc:graph`.
+
 ### DTO vs Entities
 
 - "Entities" : refer to units of composition of the overall system data. They normally represent business objects like: bank accounts, employees, products, etc. They can be used to persist the state of the system to a database. => _prisma.io_

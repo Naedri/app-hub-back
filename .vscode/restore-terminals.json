@@ -28,14 +28,14 @@
                     "commands": [
                         "clear ; npm run test"
                     ],
-                    "shouldRunCommansds": false
+                    "shouldRunCommands": false
                 },
                 {
                     "name": "data",
                     "commands": [
                         "clear ; npx prisma studio"
                     ],
-                    "shouldRunCommands": true
+                    "shouldRunCommands": false
                 }
             ]
         }
