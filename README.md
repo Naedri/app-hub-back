@@ -1,9 +1,9 @@
 # ms-users-back
 
 <p align="center">
+  <a href="https://www.typescriptlang.org/" target="blank"><img src="https://static.npmjs.com/255a118f56f5346b97e56325a1217a16.svg" width="100" alt="TypeScript Logo" /></a>
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="100" alt="Nest Logo" /></a>
   <a href="https://www.prisma.io/" target="blank"><img src="https://website-v9.vercel.app/logo-dark.svg" width="100" alt="Prisma Logo" /></a>
-  <a href="https://www.typescriptlang.org/" target="blank"><img src="https://static.npmjs.com/255a118f56f5346b97e56325a1217a16.svg" width="100" alt="TypeScript Logo" /></a>
 </p>
 
 ## Description
