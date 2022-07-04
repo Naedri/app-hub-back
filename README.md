@@ -66,7 +66,7 @@ If you want to update the database, you can do it by running `npx prisma db stud
 
 ### Editing the data model
 
-If you update the database (by editing the _prisma/schema.prisma_ file) you have to update the associated compiled files by running `npx prisma generate`.
+If you update the database (by editing the _prisma/schema.prisma_ file) you have to update the associated compiled files by running `npx prisma generate` and then you may need to update the database with `npx prisma db push`.
 
 ## Architecture of the code
 
