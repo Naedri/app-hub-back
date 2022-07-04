@@ -1,5 +1,5 @@
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { TokenWrapEntity } from './entities/token-wrap.entity';
@@ -9,11 +9,20 @@ import {
 } from 'src/users/entities/user-auth.entity';
 import { MyJwtAuthGuard } from 'src/auth/jwt.guard';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
+import { Roles } from 'src/roles/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post('register')
+  register(
+    @Body() { email, password }: CreateAuthDto,
+  ): Promise<UserNotAuthEntity> {
+    return this.authService.register(email, password);
+  }
 
   @Post('login')
   login(@Body() { email, password }: CreateAuthDto): Promise<TokenWrapEntity> {
@@ -27,10 +36,14 @@ export class AuthController {
     return await this.authService.logout(user);
   }
 
-  @Post('register')
-  register(
-    @Body() { email, password }: CreateAuthDto,
-  ): Promise<UserNotAuthEntity> {
-    return this.authService.register(email, password);
+  @Post('logout/:id')
+  @UseGuards(MyJwtAuthGuard)
+  @Roles(Role.ADMIN)
+  @ApiBearerAuth()
+  async logoutUser(
+    @AuthUser() user: UserOneAuthEntity,
+    @Param('id') userTokeUuid: string,
+  ): Promise<boolean> {
+    return await this.authService.logout(user, userTokeUuid);
   }
 }
