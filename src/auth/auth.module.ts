@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { UsersService } from 'src/users/users.service';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from 'nestjs-prisma';
 
 const jwtFactory = {
   useFactory: async (configService: ConfigService) => ({
@@ -20,6 +21,6 @@ const jwtFactory = {
 @Module({
   imports: [PassportModule, JwtModule.registerAsync(jwtFactory)],
   controllers: [AuthController],
-  providers: [Logger, AuthService, UsersService, JwtStrategy],
+  providers: [Logger, AuthService, UsersService, JwtStrategy, PrismaService],
 })
 export class AuthModule {}

@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { UserNotAuthEntity } from 'src/users/entities/user-auth.entity';
+import { UserOneAuthEntity } from 'src/users/entities/user-auth.entity';
 import { AuthService } from './auth.service';
 import { TokenContentEntity } from './entities/token-content.entity';
 
@@ -35,14 +35,15 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'my-jwt') {
    * @param payload
    * @returns a full user if the validation succeeds, or a null if it fails
    */
-  async validate(payload: TokenContentEntity): Promise<UserNotAuthEntity> {
-    const user: UserNotAuthEntity = await this.authService.validateUser(
+  async validate(payload: TokenContentEntity): Promise<UserOneAuthEntity> {
+    const user = await this.authService.validateUser(
       payload.sub,
       payload.role,
+      payload.tokenUuid,
     );
     if (!user) {
       throw new UnauthorizedException();
     }
-    return user;
+    return { ...user, tokenUuid: payload.tokenUuid };
   }
 }

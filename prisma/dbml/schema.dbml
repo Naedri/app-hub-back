@@ -27,6 +27,13 @@ Table users {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
   subscriptions subscriptions [not null]
+  tokens tokens [not null]
+}
+
+Table tokens {
+  id String [pk]
+  userId Int [not null]
+  User users
 }
 
 Enum Role {
@@ -37,3 +44,5 @@ Enum Role {
 Ref: subscriptions.appId > applications.id [delete: No Action]
 
 Ref: subscriptions.userId > users.id [delete: No Action]
+
+Ref: tokens.userId > users.id

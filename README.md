@@ -54,19 +54,19 @@ While the application is running, you can see the documentation about the endpoi
 
 ![ms-users](README.assets/ms-users.png)
 
-You can see the associated commands at the _prisma\dmbl\schema.dbml_ file.
+You can see the associated commands at the _prisma\dbml\schema.dbml_ file.
 
 ### Seeding the data
 
 After filling the _.env_ file you can fill your database with some mock users and applications (defined in _mock/_ folder). Then to populate this data into your database, you will have to run the following commands : `npx prisma db seed`.
 
-### Editing the data itselves
+### Editing the data itself
 
 If you want to update the database, you can do it by running `npx prisma db studio`, and then access to the following web page : [Prisma Studio](http://localhost:5555/).
 
 ### Editing the data model
 
-If you update the database (by editing the _prisma/schema.prisma_ file) you have to update the associated compilated files by running `npx prisma generate`.
+If you update the database (by editing the _prisma/schema.prisma_ file) you have to update the associated compiled files by running `npx prisma generate`.
 
 ## Architecture of the code
 
@@ -120,7 +120,7 @@ docker compose up
   - [prisma-client-in-your-nestjs-services](https://docs.nestjs.com/recipes/prisma#use-prisma-client-in-your-nestjs-services)
   - CLI :
     - [Introducing CLI Resource Generators](https://trilon.io/blog/introducing-cli-generators-crud-api-in-1-minute#Introduction-to-CLI-Generators)
-  - pratical :
+  - practical :
     - [Building a REST API with NestJS and Prisma](https://www.notion.so/marcjulian/Building-a-REST-API-with-NestJS-and-Prisma-8296846a0fc54ac0b445ae9364805669)
     - [nestjs-prisma-workshop](https://github.com/marcjulian/nestjs-prisma-workshop)
 - Token :
@@ -131,9 +131,9 @@ docker compose up
   - [Prisma schema reference - Naming Convention](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#naming-conventions)
   - [SQL Style Guide](https://www.sqlstyle.guide)
   - [Table Definition](https://www.dbml.org/docs/#table-definition)
-  - [dbdiagram Docs](https://dbdiagram.io/docs/)
+  - [dbDiagram Docs](https://dbdiagram.io/docs/)
 - Docker
   - [Containers vs. virtual machines | Atlassian](https://www.atlassian.com/en/continuous-delivery/microservices/containers)
-  - [Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+  - [Best practices for writing Docker files](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
   - [Docker Nodejs Tutorial](https://docs.docker.com/language/nodejs/)
   - [Example](https://github.com/notiz-dev/nestjs-prisma/blob/main/schematics/nestjs-prisma/templates/docker/common/Dockerfile)

@@ -8,16 +8,21 @@ import {
 import { compare, hash } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
-import { Role } from '@prisma/client';
+import { Role, Token } from '@prisma/client';
 import { TokenWrapEntity } from './entities/token-wrap.entity';
 import { TokenContentEntity } from './entities/token-content.entity';
-import { UserNotAuthEntity } from 'src/users/entities/user-auth.entity';
+import {
+  UserNotAuthEntity,
+  UserOneAuthEntity,
+} from 'src/users/entities/user-auth.entity';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from 'nestjs-prisma';
 
 // purposes : retrieving an user and verifying the password
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
     private readonly userService: UsersService,
     private readonly jwtService: JwtService,
@@ -38,10 +43,13 @@ export class AuthService {
       throw new UnauthorizedException('Invalid password');
     }
 
+    const tokenUuid = (await this.saveToken(user.id))?.id;
+
     //we choose a property name of sub to hold our userId value to be consistent with JWT standards
     const accessTokenContent: TokenContentEntity = {
       sub: user.id,
       role: user.role,
+      tokenUuid,
     };
     const accessToken = this.jwtService.sign(accessTokenContent);
 
@@ -78,16 +86,30 @@ export class AuthService {
     return result;
   }
 
-  async validateUser(id: number, role: Role): Promise<UserNotAuthEntity> {
+  async validateUser(
+    id: number,
+    role: Role,
+    tokenUuid: string,
+  ): Promise<UserOneAuthEntity> {
     const user = await this.userService.getById(id);
     if (user.role !== role) {
       throw new UnauthorizedException(
         `User with id : ${user.id} used a token with an outdated role, it was : ${role} instead of ${user.role}.`,
       );
     }
+
+    const token: Token = await this.prisma.token.findUnique({
+      where: { id: tokenUuid },
+    });
+    if (token == null || token.userId !== id) {
+      throw new UnauthorizedException(
+        `User with id : ${user.id} used an outdated token .`,
+      );
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...result } = user;
-    return result;
+    return { ...result, tokenUuid };
   }
 
   checkPassword(pwd: string): boolean {
@@ -100,6 +122,56 @@ export class AuthService {
     }
     // TODO activate when in prod
     // return isStrong;
+    return true;
+  }
+
+  async logout(user: UserOneAuthEntity, tokenUuid?: string): Promise<boolean> {
+    if (
+      user.role !== Role.ADMIN ||
+      (user.role === Role.ADMIN && tokenUuid == undefined)
+    ) {
+      return this.banToken(user.tokenUuid);
+    }
+    if (user.role === Role.ADMIN && tokenUuid !== undefined) {
+      return this.banToken(tokenUuid);
+    }
+    return false;
+  }
+
+  /**
+   * Saving the token in a whitelist allowing its checking in the future even if its expiration is not overdue
+   * @param userId
+   * @returns
+   */
+  async saveToken(userId: number): Promise<Token> {
+    let token: Token;
+    try {
+      token = await this.prisma.token.create({ data: { userId: userId } });
+    } catch (error) {
+      this.logger.error(error);
+    }
+    return token;
+  }
+
+  /**
+   * Remove the token from the whitelist even if its expiration is not overdue
+   * @param tokenUuid
+   * @returns
+   */
+  async banToken(tokenUuid: string): Promise<boolean> {
+    let token: Token;
+    try {
+      token = await this.prisma.token.delete({
+        where: {
+          id: tokenUuid,
+        },
+      });
+    } catch (error) {
+      this.logger.error(error);
+    }
+    this.logger.log(
+      `The following token has just expired: ${token.id}, it matched with the following user id : ${token.userId}.`,
+    );
     return true;
   }
 }

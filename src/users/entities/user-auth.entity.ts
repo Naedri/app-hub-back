@@ -1,7 +1,7 @@
 import { Role, User } from '@prisma/client';
 import { TokenWrapEntity } from 'src/auth/entities/token-wrap.entity';
 
-type IUserAuth = Omit<User, 'password'>; // User without password
+type IUserAuth = Omit<User, 'password' | 'tokenList'>; // User without password
 
 export class UserAuthEntity implements IUserAuth, TokenWrapEntity {
   id: number;
@@ -22,4 +22,10 @@ export class UserNotAuthEntity implements IUserAuth {
   role: Role;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export class UserOneAuthEntity {
+  id: number;
+  role: Role;
+  tokenUuid: string;
 }

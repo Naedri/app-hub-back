@@ -47,6 +47,7 @@ model User {
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @default(now()) @updatedAt @map("updated_at")
   subscriptions Subscription[]
+  tokens        Token[]
 
   @@map("users")
 }
@@ -54,4 +55,12 @@ model User {
 enum Role {
   CLIENT
   ADMIN
+}
+
+model Token {
+  id     String @id @default(uuid())
+  userId Int    @map("user_id")
+  User   User?  @relation(fields: [userId], references: [id])
+
+  @@map("tokens")
 }
