@@ -2,7 +2,7 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { TokenWrapEntity } from './entities/token-wrap.entity';
+import { TokenWrapEntity } from './entities/token.entity';
 import {
   UserNotAuthEntity,
   UserOneAuthEntity,

@@ -1,5 +1,5 @@
 import { Role, User } from '@prisma/client';
-import { TokenWrapEntity } from 'src/auth/entities/token-wrap.entity';
+import { TokenWrapEntity } from 'src/auth/entities/token.entity';
 
 type IUserAuth = Omit<User, 'password' | 'tokenList'>; // User without password
 

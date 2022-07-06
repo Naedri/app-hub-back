@@ -3,9 +3,8 @@ import { Application, Role, Subscription } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
-import { SubNoUserEntity } from './entities/sub.entity';
-import { AccessEntity } from './entities/access.entity';
-import { AppTokenContentEntity } from 'src/auth/entities/token-content.entity';
+import { AccessEntity, SubNoUserEntity } from './entities/sub.entity';
+import { AppTokenContentEntity } from 'src/auth/entities/token.entity';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 
 @Injectable()

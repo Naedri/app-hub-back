@@ -18,8 +18,7 @@ import { Roles } from 'src/roles/decorators/roles.decorator';
 import { Role, Subscription } from '@prisma/client';
 import { UserNotAuthEntity } from 'src/users/entities/user-auth.entity';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
-import { SubNoUserEntity } from './entities/sub.entity';
-import { AccessEntity } from './entities/access.entity';
+import { SubNoUserEntity, AccessEntity } from './entities/sub.entity';
 
 @Controller('subs')
 @ApiTags('subs')

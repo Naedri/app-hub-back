@@ -9,8 +9,7 @@ import { compare, hash } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { Role, Token } from '@prisma/client';
-import { TokenWrapEntity } from './entities/token-wrap.entity';
-import { TokenContentEntity } from './entities/token-content.entity';
+import { TokenContentEntity, TokenWrapEntity } from './entities/token.entity';
 import {
   UserNotAuthEntity,
   UserOneAuthEntity,

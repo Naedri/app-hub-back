@@ -4,7 +4,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserOneAuthEntity } from 'src/users/entities/user-auth.entity';
 import { AuthService } from './auth.service';
-import { TokenContentEntity } from './entities/token-content.entity';
+import { TokenContentEntity } from './entities/token.entity';
 
 function strategyFactory(configService: ConfigService) {
   return {
