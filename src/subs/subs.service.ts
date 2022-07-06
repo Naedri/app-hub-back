@@ -1,14 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Application, Subscription } from '@prisma/client';
+import { Application, Role, Subscription } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
 import { SubNoUserEntity } from './entities/sub.entity';
 import { AccessEntity } from './entities/access.entity';
+import { AppTokenContentEntity } from 'src/auth/entities/token-content.entity';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 
 @Injectable()
 export class SubsService {
-  constructor(private prisma: PrismaService, private readonly logger: Logger) {
+  constructor(
+    private prisma: PrismaService,
+    private readonly logger: Logger,
+    private readonly jwtService: JwtService,
+  ) {
     this.logger = new Logger(this.constructor.name);
   }
 
@@ -60,16 +66,30 @@ export class SubsService {
 
   /**
    *
-   * @param userId
    * @param appId
+   * @param userId
    * @returns url of the given appId with an authorization token
    */
-  async getProtectedUrl(appId: number, userId: number): Promise<string> {
+  async getProtectedUrl(
+    appId: number,
+    userId: number,
+    role = Role.CLIENT,
+  ): Promise<string> {
     const app: Application = await this.prisma.application.findUnique({
       where: { id: appId },
     });
-    // TODO add authorization for userId attribute to app.url
-    return app?.url;
+
+    //we choose a property name of sub to hold our userId value to be consistent with JWT standards
+    const appTokenContent: AppTokenContentEntity = {
+      sub: userId,
+      role: role,
+    };
+    const options: JwtSignOptions = {
+      secret: app.secretJWT,
+    };
+    const appToken = await this.jwtService.signAsync(appTokenContent, options);
+    const url = `${app.baseURL}?appToken=${appToken}`;
+    return url;
   }
 
   /**

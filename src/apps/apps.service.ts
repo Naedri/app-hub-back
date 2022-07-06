@@ -2,8 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateAppDto } from './dto/create-app.dto';
 import { UpdateAppDto } from './dto/update-app.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AppEntity } from './entities/app.entity';
-import { AppNoUrlEntitiy } from './entities/app-no-url.entity';
+import { AppEntity, AppDiscoverEntity } from './entities/app.entity';
 
 @Injectable()
 export class AppsService {
@@ -11,19 +10,19 @@ export class AppsService {
     this.logger = new Logger(this.constructor.name);
   }
 
-  async discoverOne(id: number): Promise<AppNoUrlEntitiy> {
+  async discoverOne(id: number): Promise<AppDiscoverEntity> {
     const result = await this.findOne(id);
-    delete result?.url;
+    delete result?.baseURL;
     return result;
   }
 
-  async discoverAll(): Promise<AppNoUrlEntitiy[]> {
+  async discoverAll(): Promise<AppDiscoverEntity[]> {
     const results = await this.findAll();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return results?.map(({ url, ...item }) => item);
+    return results?.map(({ baseURL, ...item }) => item);
   }
 
-  async create(createAppDto: CreateAppDto) {
+  async create(createAppDto: CreateAppDto): Promise<AppEntity> {
     let result;
     try {
       result = await this.prisma.application.create({ data: createAppDto });
@@ -37,6 +36,7 @@ export class AppsService {
     let result;
     try {
       result = await this.prisma.application.findMany({});
+      delete result?.baseURL;
     } catch (error) {
       this.logger.error(error);
     }
@@ -49,13 +49,14 @@ export class AppsService {
       result = await this.prisma.application.findUnique({
         where: { id },
       });
+      delete result?.baseURL;
     } catch (error) {
       this.logger.error(error);
     }
     return result;
   }
 
-  async update(id: number, updateAppDto: UpdateAppDto) {
+  async update(id: number, updateAppDto: UpdateAppDto): Promise<AppEntity> {
     let result;
     try {
       result = await this.prisma.application.update({

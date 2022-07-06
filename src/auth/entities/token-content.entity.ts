@@ -5,3 +5,8 @@ export class TokenContentEntity {
   sub: number;
   role: Role;
 }
+
+export class AppTokenContentEntity {
+  sub: number;
+  role: Role;
+}

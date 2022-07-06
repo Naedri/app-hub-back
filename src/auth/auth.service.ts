@@ -120,9 +120,7 @@ export class AuthService {
         'Password should contain at least one number and one special character, and between 8 and 16 characters.',
       );
     }
-    // TODO activate when in prod
-    // return isStrong;
-    return true;
+    return isStrong;
   }
 
   async logout(user: UserOneAuthEntity, tokenUuid?: string): Promise<boolean> {

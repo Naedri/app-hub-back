@@ -5,7 +5,10 @@
 Table applications {
   id Int [pk, increment]
   name String [unique, not null]
-  url String
+  landingPage String
+  description Json
+  baseURL String
+  secretJWT String
   subscriptions subscriptions [not null]
 }
 

@@ -19,7 +19,7 @@ async function main() {
   for (const app of mockApps) {
     const res = await prisma.application.create({ data: app });
     Logger.log(
-      `App with id : ${res.id} and url: ${res.url} has just been created.`,
+      `App with id : ${res.id} and url: ${res.landingPage} has just been created.`,
     );
   }
 
