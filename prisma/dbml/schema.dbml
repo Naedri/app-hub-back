@@ -16,6 +16,7 @@ Table subscriptions {
   id Int [pk, increment]
   appId Int [not null]
   userId Int [not null]
+  subTokens sub_tokens [not null]
   applications applications [not null]
   users users [not null]
 }
@@ -39,6 +40,12 @@ Table tokens {
   User users
 }
 
+Table sub_tokens {
+  id String [pk]
+  subscriptionId Int [not null]
+  Subscription subscriptions
+}
+
 Enum Role {
   CLIENT
   ADMIN
@@ -49,3 +56,5 @@ Ref: subscriptions.appId > applications.id [delete: No Action]
 Ref: subscriptions.userId > users.id [delete: No Action]
 
 Ref: tokens.userId > users.id
+
+Ref: sub_tokens.subscriptionId > subscriptions.id

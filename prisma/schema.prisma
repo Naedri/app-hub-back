@@ -36,6 +36,7 @@ model Subscription {
   id           Int         @id @default(autoincrement())
   appId        Int         @map("app_id")
   userId       Int         @map("user_id")
+  subTokens    SubToken[]
   applications Application @relation(fields: [appId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users        User        @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -64,10 +65,20 @@ enum Role {
   ADMIN
 }
 
+// To allowed interactions with this app
 model Token {
   id     String @id @default(uuid())
   userId Int    @map("user_id")
   User   User?  @relation(fields: [userId], references: [id])
 
   @@map("tokens")
+}
+
+// To allowed interactions with the subscribed other applications
+model SubToken {
+  id             String        @id @default(uuid())
+  subscriptionId Int           @map("subscription_id")
+  Subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  @@map("sub_tokens")
 }

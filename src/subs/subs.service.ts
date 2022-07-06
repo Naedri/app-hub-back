@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Application, Role, Subscription } from '@prisma/client';
+import { Application, Role, Subscription, SubToken } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
@@ -50,7 +50,7 @@ export class SubsService {
       // adding url
       temp = await Promise.all(
         temp?.map(async (item) => ({
-          url: await this.getProtectedUrl(item.appId, item.userId),
+          url: await this.getProtectedUrl(item.appId, item.userId, item.subId),
           ...item,
         })),
       );
@@ -72,6 +72,7 @@ export class SubsService {
   async getProtectedUrl(
     appId: number,
     userId: number,
+    subId: number,
     role = Role.CLIENT,
   ): Promise<string> {
     let url: string;
@@ -79,11 +80,14 @@ export class SubsService {
       where: { id: appId },
     });
     if (app) {
+      const subTokenUuid = (await this.addSubToken(subId))?.id;
+
       //we choose a property name of sub to hold our userId value to be consistent with JWT standards
       const appTokenContent: AppTokenContentEntity = {
         sub: userId,
         role: role,
         appId: app.id,
+        subTokenUuid,
       };
       const options: JwtSignOptions = {
         secret: app.secretJWT,
@@ -95,6 +99,35 @@ export class SubsService {
       url = `${app.baseURL}?appToken=${appToken}`;
     }
     return url;
+  }
+
+  async addSubToken(subscriptionId: number): Promise<SubToken> {
+    let subToken: SubToken;
+    try {
+      subToken = await this.prisma.subToken.create({
+        data: { subscriptionId: subscriptionId },
+      });
+    } catch (error) {
+      this.logger.error(error);
+    }
+    return subToken;
+  }
+
+  async removeSubToken(tokenUuid: string): Promise<boolean> {
+    let subToken: SubToken;
+    try {
+      subToken = await this.prisma.subToken.delete({
+        where: {
+          id: tokenUuid,
+        },
+      });
+    } catch (error) {
+      this.logger.error(error);
+    }
+    this.logger.log(
+      `The following token has just expired: ${subToken.id}, it matched with the following user id : ${subToken.subscriptionId}.`,
+    );
+    return true;
   }
 
   /**

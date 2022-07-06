@@ -10,14 +10,17 @@ export class TokenWrapEntity {
 /**
  * Token content
  */
+//we choose a property name of sub to hold our userId value to be consistent with JWT standards
 export class TokenContentEntity {
-  tokenUuid: string;
   sub: number;
   role: Role;
+  tokenUuid: string;
 }
 
+//we choose a property name of sub to hold our userId value to be consistent with JWT standards
 export class AppTokenContentEntity {
-  sub: number;
   appId: number;
+  sub: number;
   role: Role;
+  subTokenUuid: string;
 }
