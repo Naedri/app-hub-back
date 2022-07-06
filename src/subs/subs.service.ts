@@ -91,6 +91,7 @@ export class SubsService {
       };
       const options: JwtSignOptions = {
         secret: app.secretJWT,
+        expiresIn: process.env.JWT_EXPIRES_IN,
       };
       const appToken = await this.jwtService.signAsync(
         appTokenContent,
