@@ -10,7 +10,7 @@
                     "commands": [
                         "clear ; npm run start:dev"
                     ],
-                    "shouldRunCommands": true
+                    "shouldRunCommands": false
                 },
                 {
                     "name": "cmd",

@@ -66,7 +66,8 @@ If you want to update the database, you can do it by running `npx prisma db stud
 
 ### Editing the data model
 
-If you update the database (by editing the _prisma/schema.prisma_ file) you have to update the associated compiled files by running `npx prisma generate` and then you may need to update the database with `npx prisma db push`.
+If you update the database (by editing the _prisma/schema.prisma_ file) after evaluating its validation with `npx prisma validate`, you have to update the associated compiled files by running `npx prisma generate` and then you may need to update the database with `npx prisma db push`.
+You should as well edit the following picture : _README.assets\ms-users.png_, by copy the content from _prisma\dbml\schema.dbml_ to [dbdiagram.io](https://dbdiagram.io/d).
 
 ## Architecture of the code
 
