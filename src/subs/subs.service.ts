@@ -75,20 +75,26 @@ export class SubsService {
     userId: number,
     role = Role.CLIENT,
   ): Promise<string> {
+    let url: string;
     const app: Application = await this.prisma.application.findUnique({
       where: { id: appId },
     });
-
-    //we choose a property name of sub to hold our userId value to be consistent with JWT standards
-    const appTokenContent: AppTokenContentEntity = {
-      sub: userId,
-      role: role,
-    };
-    const options: JwtSignOptions = {
-      secret: app.secretJWT,
-    };
-    const appToken = await this.jwtService.signAsync(appTokenContent, options);
-    const url = `${app.baseURL}?appToken=${appToken}`;
+    if (app) {
+      //we choose a property name of sub to hold our userId value to be consistent with JWT standards
+      const appTokenContent: AppTokenContentEntity = {
+        sub: userId,
+        role: role,
+        appId: app.id,
+      };
+      const options: JwtSignOptions = {
+        secret: app.secretJWT,
+      };
+      const appToken = await this.jwtService.signAsync(
+        appTokenContent,
+        options,
+      );
+      url = `${app.baseURL}?appToken=${appToken}`;
+    }
     return url;
   }
 

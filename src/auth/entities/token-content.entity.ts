@@ -8,5 +8,6 @@ export class TokenContentEntity {
 
 export class AppTokenContentEntity {
   sub: number;
+  appId: number;
   role: Role;
 }

@@ -26,6 +26,7 @@ export class AppsService {
     let result;
     try {
       result = await this.prisma.application.create({ data: createAppDto });
+      delete result?.secretJWT;
     } catch (error) {
       this.logger.error(error);
     }
@@ -33,14 +34,14 @@ export class AppsService {
   }
 
   async findAll(): Promise<AppEntity[]> {
-    let result;
+    let results;
     try {
-      result = await this.prisma.application.findMany({});
-      delete result?.baseURL;
+      results = await this.prisma.application.findMany({});
     } catch (error) {
       this.logger.error(error);
     }
-    return result;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return results?.map(({ secretJWT, ...item }) => item);
   }
 
   async findOne(id: number): Promise<AppEntity> {
@@ -49,7 +50,7 @@ export class AppsService {
       result = await this.prisma.application.findUnique({
         where: { id },
       });
-      delete result?.baseURL;
+      delete result?.secretJWT;
     } catch (error) {
       this.logger.error(error);
     }
@@ -63,6 +64,7 @@ export class AppsService {
         where: { id },
         data: { ...updateAppDto },
       });
+      delete result?.secretJWT;
     } catch (error) {
       this.logger.error(error);
     }
