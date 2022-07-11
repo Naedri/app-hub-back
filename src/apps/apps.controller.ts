@@ -20,8 +20,7 @@ import { AppEntity, AppDiscoverEntity } from './entities/app.entity';
 
 @Controller('apps')
 @ApiTags('apps')
-@UseGuards(MyJwtAuthGuard, RolesGuard)
-@ApiBearerAuth()
+@UseGuards(RolesGuard)
 export class AppsController {
   constructor(private readonly appsService: AppsService) {}
 
@@ -36,24 +35,32 @@ export class AppsController {
   }
 
   @Get()
+  @UseGuards(MyJwtAuthGuard)
+  @ApiBearerAuth()
   @Roles(Role.ADMIN)
   findAll(): Promise<AppEntity[]> {
     return this.appsService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(MyJwtAuthGuard)
+  @ApiBearerAuth()
   @Roles(Role.ADMIN)
   findOne(@Param('id') id: string): Promise<AppEntity> {
     return this.appsService.findOne(+id);
   }
 
   @Post()
+  @UseGuards(MyJwtAuthGuard)
+  @ApiBearerAuth()
   @Roles(Role.ADMIN)
   create(@Body() createAppDto: CreateAppDto): Promise<AppEntity> {
     return this.appsService.create(createAppDto);
   }
 
   @Patch(':id')
+  @UseGuards(MyJwtAuthGuard)
+  @ApiBearerAuth()
   @Roles(Role.ADMIN)
   update(
     @Param('id') id: string,
@@ -63,6 +70,8 @@ export class AppsController {
   }
 
   @Delete(':id')
+  @UseGuards(MyJwtAuthGuard)
+  @ApiBearerAuth()
   @Roles(Role.ADMIN)
   remove(@Param('id') id: string) {
     return this.appsService.remove(+id);
