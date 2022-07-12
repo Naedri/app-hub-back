@@ -1,6 +1,6 @@
 import { Application, Prisma } from '@prisma/client';
 
-type IApp = Omit<Application, 'secretJWT'>; // App without confidential details
+type IApp = Application;
 
 export class AppEntity implements IApp {
   id: number;

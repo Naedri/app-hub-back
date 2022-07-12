@@ -5,7 +5,7 @@ import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
 import { AccessEntity, SubNoUserEntity } from './entities/sub.entity';
 import { AppTokenContentEntity } from 'src/auth/entities/token.entity';
-import { JwtService, JwtSignOptions } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class SubsService {
@@ -89,14 +89,7 @@ export class SubsService {
         appId: app.id,
         subTokenUuid,
       };
-      const options: JwtSignOptions = {
-        secret: app.secretJWT,
-        expiresIn: process.env.JWT_EXPIRES_IN,
-      };
-      const appToken = await this.jwtService.signAsync(
-        appTokenContent,
-        options,
-      );
+      const appToken = this.jwtService.sign(appTokenContent);
       url = `${app.baseURL}?appToken=${appToken}`;
     }
     return url;

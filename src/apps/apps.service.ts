@@ -26,7 +26,6 @@ export class AppsService {
     let result;
     try {
       result = await this.prisma.application.create({ data: createAppDto });
-      delete result?.secretJWT;
     } catch (error) {
       this.logger.error(error);
     }
@@ -40,8 +39,7 @@ export class AppsService {
     } catch (error) {
       this.logger.error(error);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return results?.map(({ secretJWT, ...item }) => item);
+    return results;
   }
 
   async findOne(id: number): Promise<AppEntity> {
@@ -50,7 +48,6 @@ export class AppsService {
       result = await this.prisma.application.findUnique({
         where: { id },
       });
-      delete result?.secretJWT;
     } catch (error) {
       this.logger.error(error);
     }
@@ -64,7 +61,6 @@ export class AppsService {
         where: { id },
         data: { ...updateAppDto },
       });
-      delete result?.secretJWT;
     } catch (error) {
       this.logger.error(error);
     }

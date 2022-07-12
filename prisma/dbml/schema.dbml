@@ -8,7 +8,6 @@ Table applications {
   landingPage String
   description Json
   baseURL String
-  secretJWT String
   subscriptions subscriptions [not null]
 }
 
