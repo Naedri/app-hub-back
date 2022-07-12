@@ -11,6 +11,7 @@ import { MyJwtAuthGuard } from 'src/auth/jwt.guard';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
 import { Roles } from 'src/roles/decorators/roles.decorator';
 import { Role } from '@prisma/client';
+import { RolesGuard } from 'src/roles/guards/roles.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -37,9 +38,9 @@ export class AuthController {
   }
 
   @Post('logout/:id')
-  @UseGuards(MyJwtAuthGuard)
-  @Roles(Role.ADMIN)
+  @UseGuards(MyJwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
+  @Roles(Role.ADMIN)
   async logoutUser(
     @AuthUser() user: UserOneAuthEntity,
     @Param('id') userTokeUuid: string,

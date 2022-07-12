@@ -20,7 +20,6 @@ import { AppEntity, AppDiscoverEntity } from './entities/app.entity';
 
 @Controller('apps')
 @ApiTags('apps')
-@UseGuards(RolesGuard)
 export class AppsController {
   constructor(private readonly appsService: AppsService) {}
 
@@ -35,7 +34,7 @@ export class AppsController {
   }
 
   @Get()
-  @UseGuards(MyJwtAuthGuard)
+  @UseGuards(MyJwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Roles(Role.ADMIN)
   findAll(): Promise<AppEntity[]> {
@@ -43,7 +42,7 @@ export class AppsController {
   }
 
   @Get(':id')
-  @UseGuards(MyJwtAuthGuard)
+  @UseGuards(MyJwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Roles(Role.ADMIN)
   findOne(@Param('id') id: string): Promise<AppEntity> {
@@ -51,7 +50,7 @@ export class AppsController {
   }
 
   @Post()
-  @UseGuards(MyJwtAuthGuard)
+  @UseGuards(MyJwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Roles(Role.ADMIN)
   create(@Body() createAppDto: CreateAppDto): Promise<AppEntity> {
@@ -59,7 +58,7 @@ export class AppsController {
   }
 
   @Patch(':id')
-  @UseGuards(MyJwtAuthGuard)
+  @UseGuards(MyJwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Roles(Role.ADMIN)
   update(
@@ -70,7 +69,7 @@ export class AppsController {
   }
 
   @Delete(':id')
-  @UseGuards(MyJwtAuthGuard)
+  @UseGuards(MyJwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Roles(Role.ADMIN)
   remove(@Param('id') id: string) {

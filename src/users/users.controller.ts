@@ -4,6 +4,7 @@ import { Role } from '@prisma/client';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
 import { MyJwtAuthGuard } from 'src/auth/jwt.guard';
 import { Roles } from 'src/roles/decorators/roles.decorator';
+import { RolesGuard } from 'src/roles/guards/roles.guard';
 import { UserNotAuthEntity } from './entities/user-auth.entity';
 import { UsersService } from './users.service';
 
@@ -24,6 +25,7 @@ export class UsersController {
   }
 
   @Get('profile/:id')
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   async findOne(@Param('id') id: number): Promise<UserNotAuthEntity> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
