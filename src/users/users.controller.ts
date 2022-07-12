@@ -1,7 +1,9 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Role } from '@prisma/client';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
 import { MyJwtAuthGuard } from 'src/auth/jwt.guard';
+import { Roles } from 'src/roles/decorators/roles.decorator';
 import { UserNotAuthEntity } from './entities/user-auth.entity';
 import { UsersService } from './users.service';
 
@@ -18,6 +20,14 @@ export class UsersController {
   ): Promise<UserNotAuthEntity> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...result } = await this.usersService.getById(user.id);
+    return result;
+  }
+
+  @Get('profile/:id')
+  @Roles(Role.ADMIN)
+  async findOne(@Param('id') id: number): Promise<UserNotAuthEntity> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = await this.usersService.getById(+id);
     return result;
   }
 }
