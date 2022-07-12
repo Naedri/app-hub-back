@@ -61,10 +61,15 @@ export class AuthService {
   async register(email: string, pwd: string): Promise<UserNotAuthEntity> {
     const emailExists = await this.userService.getByEmail(email);
     if (emailExists) {
-      throw new NotAcceptableException('Email already exists');
+      throw new NotAcceptableException('Email already exists.');
+    }
+    if (!this.checkEmail(email)) {
+      throw new NotAcceptableException('Email is incorrect.');
     }
     if (!this.checkPassword(pwd)) {
-      throw new NotAcceptableException('Password length incorrect');
+      throw new NotAcceptableException(
+        'Password should contain at least one number and one special character, and between 8 and 16 characters.',
+      );
     }
 
     const rounds = this.configService.get<string>('HASH_ROUND');
@@ -114,12 +119,15 @@ export class AuthService {
   checkPassword(pwd: string): boolean {
     const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
     const isStrong = regex.test(pwd);
-    if (!isStrong) {
-      this.logger.warn(
-        'Password should contain at least one number and one special character, and between 8 and 16 characters.',
-      );
-    }
+    this.logger.log(`Password is ${isStrong ? 'valid' : 'invalid'}.`);
     return isStrong;
+  }
+
+  checkEmail(email: string): boolean {
+    const regex = /.+@.+\..+/;
+    const isValid = regex.test(email);
+    this.logger.log(`Email is ${isValid ? 'valid' : 'invalid'}.`);
+    return isValid;
   }
 
   async logout(user: UserOneAuthEntity, tokenUuid?: string): Promise<boolean> {
