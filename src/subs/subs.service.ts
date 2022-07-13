@@ -70,8 +70,8 @@ export class SubsService {
    * @returns url of the given appId with an authorization token
    */
   async getProtectedUrl(
-    appId: number,
     userId: number,
+    appId: number,
     subId: number,
     role = Role.CLIENT,
   ): Promise<string> {
@@ -80,7 +80,7 @@ export class SubsService {
       where: { id: appId },
     });
     if (app) {
-      const subTokenUuid = (await this.addSubToken(subId))?.id;
+      const subTokenUuid = (await this.createSubToken(subId))?.id;
 
       //we choose a property name of sub to hold our userId value to be consistent with JWT standards
       const appTokenContent: AppTokenContentEntity = {
@@ -95,7 +95,7 @@ export class SubsService {
     return url;
   }
 
-  async addSubToken(subscriptionId: number): Promise<SubToken> {
+  async createSubToken(subscriptionId: number): Promise<SubToken> {
     let subToken: SubToken;
     try {
       subToken = await this.prisma.subToken.create({
@@ -105,6 +105,39 @@ export class SubsService {
       this.logger.error(error);
     }
     return subToken;
+  }
+
+  async createManySubTokens(subscriptionsId: number[]): Promise<number> {
+    try {
+      const data: { subscriptionId: number }[] = [];
+      subscriptionsId.forEach((item) => data.push({ subscriptionId: item }));
+      const { count } = await this.prisma.subToken.createMany({ data });
+      if (subscriptionsId.length > count) {
+        throw new Error(
+          'addSubTokens : some subToken have not been added to the db.',
+        );
+      }
+      return count;
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  async findManySubTokens(subscriptionsId: number[]): Promise<SubToken[]> {
+    let subTokens: SubToken[];
+    try {
+      const criteria: any = {
+        where: {
+          id: {
+            in: subscriptionsId,
+          },
+        },
+      };
+      subTokens = await this.prisma.subToken.findMany(criteria);
+    } catch (error) {
+      this.logger.error(error);
+    }
+    return subTokens;
   }
 
   async removeSubToken(tokenUuid: string): Promise<boolean> {
