@@ -3,7 +3,11 @@ import { Application, Role, Subscription, SubToken } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
-import { AccessEntity, SubNoUserEntity } from './entities/sub.entity';
+import {
+  AccessEntity,
+  AccessEntityDetails,
+  SubNoUserEntity,
+} from './entities/sub.entity';
 import { AppTokenContentEntity } from 'src/auth/entities/token.entity';
 import { JwtService } from '@nestjs/jwt';
 
@@ -216,6 +220,66 @@ export class SubsService {
       result = await this.prisma.subscription.findUnique({
         where: { id },
       });
+    } catch (error) {
+      this.logger.error(error);
+    }
+    return result;
+  }
+
+  async findMany(ids: number[]): Promise<Subscription[]> {
+    let result: Subscription[];
+    try {
+      const criteria: any = {
+        where: {
+          id: {
+            in: ids,
+          },
+        },
+      };
+      result = await this.prisma.subscription.findMany(criteria);
+    } catch (error) {
+      this.logger.error(error);
+    }
+    return result;
+  }
+
+  async findManyByUser(userId: number): Promise<Subscription[]> {
+    let result: Subscription[];
+    try {
+      const criteria: any = {
+        where: {
+          id: {
+            userId: userId,
+          },
+        },
+      };
+      result = await this.prisma.subscription.findMany(criteria);
+    } catch (error) {
+      this.logger.error(error);
+    }
+    return result;
+  }
+
+  /**
+   * Allow to list all the subscriptions of the given user with the detail of the associated application and the save token to get in.
+   * @param userId
+   * @returns
+   */
+  async findManyWithAppsByUser(userId: number): Promise<AccessEntityDetails[]> {
+    let result;
+    try {
+      const criteria: any = {
+        where: {
+          userId: {
+            equals: userId,
+          },
+        },
+        include: {
+          applications: true,
+          subTokens: true,
+        },
+      };
+      result = await this.prisma.subscription.findMany(criteria);
     } catch (error) {
       this.logger.error(error);
     }

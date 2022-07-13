@@ -1,4 +1,4 @@
-import { Subscription } from '@prisma/client';
+import { Application, Subscription, SubToken } from '@prisma/client';
 
 /**
  * Access entity
@@ -12,6 +12,18 @@ export class AccessEntity implements IAccess {
   accessUrlToken?: string;
 }
 
+type IAccessDetails = Subscription & {
+  applications: Application[];
+  subTokens: SubToken[];
+};
+
+export class AccessEntityDetails implements IAccessDetails {
+  id: number;
+  appId: number;
+  userId: number;
+  applications: Application[];
+  subTokens: SubToken[];
+}
 /**
  * Subscription entity
  */

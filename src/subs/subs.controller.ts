@@ -18,7 +18,11 @@ import { Roles } from 'src/roles/decorators/roles.decorator';
 import { Role, Subscription } from '@prisma/client';
 import { UserNotAuthEntity } from 'src/users/entities/user-auth.entity';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
-import { SubNoUserEntity, AccessEntity } from './entities/sub.entity';
+import {
+  SubNoUserEntity,
+  AccessEntity,
+  AccessEntityDetails,
+} from './entities/sub.entity';
 
 @Controller('subs')
 @ApiTags('subs')
@@ -27,22 +31,32 @@ import { SubNoUserEntity, AccessEntity } from './entities/sub.entity';
 export class SubsController {
   constructor(private readonly subsService: SubsService) {}
 
-  @Get('myAccess')
+  @Get('access')
   @Roles(Role.CLIENT)
-  myAccesses(@AuthUser() user: UserNotAuthEntity): Promise<AccessEntity[]> {
+  myAccesses(
+    @AuthUser() user: UserNotAuthEntity,
+  ): Promise<AccessEntityDetails[]> {
+    return this.subsService.findManyWithAppsByUser(user.id);
+  }
+
+  @Get('refreshAccess')
+  @Roles(Role.CLIENT)
+  myRefreshAccesses(
+    @AuthUser() user: UserNotAuthEntity,
+  ): Promise<AccessEntity[]> {
     return this.subsService.getUserAccess(user.id);
   }
 
-  @Get('myAccess/:id')
+  @Get('refreshAccess/:id')
   @Roles(Role.CLIENT)
-  async myAccess(
+  async myRefreshAccess(
     @AuthUser() user: UserNotAuthEntity,
     @Param('id') subId: number,
   ): Promise<AccessEntity> {
     return (await this.subsService.getUserAccess(user.id, +subId))?.pop();
   }
 
-  @Get('me')
+  @Get('sub')
   @Roles(Role.CLIENT)
   mySubscriptions(
     @AuthUser() user: UserNotAuthEntity,
@@ -50,7 +64,7 @@ export class SubsController {
     return this.subsService.getUserSubs(user.id);
   }
 
-  @Get('me/:id')
+  @Get('sub/:id')
   @Roles(Role.CLIENT)
   async mySubscription(
     @AuthUser() user: UserNotAuthEntity,
