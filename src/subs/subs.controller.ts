@@ -42,23 +42,19 @@ export class SubsController {
     return this.subsService.getAccess(user);
   }
 
-  @Get('refreshAccess')
-  @Roles(Role.CLIENT)
-  myRefreshAccesses(
-    @AuthUser() user: UserNotAuthEntity,
-  ): Promise<AccessEntity[]> {
-    return this.subsService.getUserRefreshAccess(user.id);
+  @Get('refreshAccess/:userId')
+  @Roles(Role.ADMIN)
+  myRefreshAccesses(@Param('userId') userId: number): Promise<AccessEntity[]> {
+    return this.subsService.getUserRefreshAccess(userId);
   }
 
-  @Get('refreshAccess/:id')
-  @Roles(Role.CLIENT)
+  @Get('refreshAccess/:userId/:subId')
+  @Roles(Role.ADMIN)
   async myRefreshAccess(
-    @AuthUser() user: UserNotAuthEntity,
-    @Param('id') subId: number,
+    @Param('userId') userId: number,
+    @Param('subId') subId: number,
   ): Promise<AccessEntity> {
-    return (
-      await this.subsService.getUserRefreshAccess(user.id, +subId)
-    )?.pop();
+    return (await this.subsService.getUserRefreshAccess(userId, +subId))?.pop();
   }
 
   @Get('sub')
