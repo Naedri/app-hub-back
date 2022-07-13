@@ -1,5 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Application, Role, Subscription, SubToken } from '@prisma/client';
+import {
+  Application,
+  Prisma,
+  Role,
+  Subscription,
+  SubToken,
+} from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
@@ -34,8 +40,7 @@ export class SubsService {
   ): Promise<AccessEntity[]> {
     let results: AccessEntity[];
     try {
-      // eslint-disable-next-line prefer-const
-      let criteria: any = {
+      const criteria: Prisma.SubscriptionFindManyArgs = {
         where: {
           userId: {
             equals: userId,
@@ -189,9 +194,9 @@ export class SubsService {
   async findManySubTokens(subscriptionsId: number[]): Promise<SubToken[]> {
     let subTokens: SubToken[];
     try {
-      const criteria: any = {
+      const criteria: Prisma.SubTokenFindManyArgs = {
         where: {
-          id: {
+          subscriptionId: {
             in: subscriptionsId,
           },
         },
@@ -232,8 +237,7 @@ export class SubsService {
   ): Promise<SubNoUserEntity[]> {
     let results: Subscription[];
     try {
-      // eslint-disable-next-line prefer-const
-      let criteria: any = {
+      const criteria: Prisma.SubscriptionFindManyArgs = {
         where: {
           userId: {
             equals: userId,
@@ -288,7 +292,7 @@ export class SubsService {
   async findMany(ids: number[]): Promise<Subscription[]> {
     let result: Subscription[];
     try {
-      const criteria: any = {
+      const criteria: Prisma.SubscriptionFindManyArgs = {
         where: {
           id: {
             in: ids,
@@ -305,10 +309,10 @@ export class SubsService {
   async findManyByUser(userId: number): Promise<Subscription[]> {
     let result: Subscription[];
     try {
-      const criteria: any = {
+      const criteria: Prisma.SubscriptionFindManyArgs = {
         where: {
-          id: {
-            userId: userId,
+          userId: {
+            equals: userId,
           },
         },
       };
@@ -328,7 +332,7 @@ export class SubsService {
   async findManyWithAppsByUser(userId: number): Promise<AccessEntityDetails[]> {
     let result;
     try {
-      const criteria: any = {
+      const criteria: Prisma.SubscriptionFindManyArgs = {
         where: {
           userId: {
             equals: userId,

@@ -3,6 +3,7 @@ import { CreateAppDto } from './dto/create-app.dto';
 import { UpdateAppDto } from './dto/update-app.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AppEntity, AppDiscoverEntity } from './entities/app.entity';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AppsService {
@@ -13,17 +14,13 @@ export class AppsService {
   async discoverOne(id: number): Promise<AppEntity> {
     let result;
     try {
-      const criteria: any = {
+      const criteria: Prisma.ApplicationFindUniqueArgsBase = {
         where: {
-          id: {
-            equals: id,
-          },
-          isPublic: {
-            equals: true,
-          },
+          id,
         },
       };
       result = await this.prisma.application.findUnique(criteria);
+      result = result?.isPublic ? result : null;
     } catch (error) {
       this.logger.error(error);
     }
@@ -43,11 +40,14 @@ export class AppsService {
   async discoverAll(): Promise<AppEntity[]> {
     let result;
     try {
-      const criteria: any = {
+      const criteria: Prisma.ApplicationFindManyArgs = {
         where: {
           isPublic: {
             equals: true,
           },
+        },
+        orderBy: {
+          name: 'asc',
         },
       };
       result = await this.prisma.application.findMany(criteria);
