@@ -12,17 +12,23 @@ export class AccessEntity implements IAccess {
   accessUrlToken?: string;
 }
 
+/**
+ * Access entity details
+ */
+// as the token is generated with the subTokenUuid, it is added in the subTokens property
+interface ISubTokenWithData extends SubToken {
+  accessUrlTokenized?: string;
+}
 type IAccessDetails = Subscription & {
-  applications: Application[];
-  subTokens: SubToken[];
+  application: Application;
+  subTokens: ISubTokenWithData[];
 };
-
 export class AccessEntityDetails implements IAccessDetails {
   id: number;
   appId: number;
   userId: number;
-  applications: Application[];
-  subTokens: SubToken[];
+  application: Application;
+  subTokens: ISubTokenWithData[];
 }
 /**
  * Subscription entity

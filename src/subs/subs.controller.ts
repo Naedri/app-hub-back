@@ -16,7 +16,10 @@ import { RolesGuard } from 'src/roles/guards/roles.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/roles/decorators/roles.decorator';
 import { Role, Subscription } from '@prisma/client';
-import { UserNotAuthEntity } from 'src/users/entities/user-auth.entity';
+import {
+  UserNotAuthEntity,
+  UserOneAuthEntity,
+} from 'src/users/entities/user-auth.entity';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
 import {
   SubNoUserEntity,
@@ -34,9 +37,9 @@ export class SubsController {
   @Get('access')
   @Roles(Role.CLIENT)
   myAccesses(
-    @AuthUser() user: UserNotAuthEntity,
+    @AuthUser() user: UserOneAuthEntity,
   ): Promise<AccessEntityDetails[]> {
-    return this.subsService.findManyWithAppsByUser(user.id);
+    return this.subsService.getAccess(user);
   }
 
   @Get('refreshAccess')
@@ -44,7 +47,7 @@ export class SubsController {
   myRefreshAccesses(
     @AuthUser() user: UserNotAuthEntity,
   ): Promise<AccessEntity[]> {
-    return this.subsService.getUserAccess(user.id);
+    return this.subsService.getUserRefreshAccess(user.id);
   }
 
   @Get('refreshAccess/:id')
@@ -53,7 +56,9 @@ export class SubsController {
     @AuthUser() user: UserNotAuthEntity,
     @Param('id') subId: number,
   ): Promise<AccessEntity> {
-    return (await this.subsService.getUserAccess(user.id, +subId))?.pop();
+    return (
+      await this.subsService.getUserRefreshAccess(user.id, +subId)
+    )?.pop();
   }
 
   @Get('sub')

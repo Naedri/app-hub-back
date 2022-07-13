@@ -10,6 +10,7 @@ import {
 } from './entities/sub.entity';
 import { AppTokenContentEntity } from 'src/auth/entities/token.entity';
 import { JwtService } from '@nestjs/jwt';
+import { UserOneAuthEntity } from 'src/users/entities/user-auth.entity';
 
 @Injectable()
 export class SubsService {
@@ -27,7 +28,7 @@ export class SubsService {
    * @param subId
    * @returns list of the url for each app the user has an appropriate subscription
    */
-  async getUserAccess(
+  async getUserRefreshAccess(
     userId: number,
     subId: number = undefined,
   ): Promise<AccessEntity[]> {
@@ -68,7 +69,7 @@ export class SubsService {
   }
 
   /**
-   *
+   * It will create a new token each time it is called
    * @param appId
    * @param userId
    * @returns url of the given appId with an authorization token
@@ -99,6 +100,40 @@ export class SubsService {
     return url;
   }
 
+  /**
+   * It will NOT create into the db a new subToken each time it is called
+   * BUT it will DO create new tokens if they are missing.
+   * BUT It will jwt.signed a new token to update the accessUrlTokenized
+   * @return list by subscriptions and then by app an array of one subToken with accessUrl
+   */
+  async getAccess(user: UserOneAuthEntity): Promise<AccessEntityDetails[]> {
+    let access = await this.findManyWithAppsByUserTrimmed(user.id);
+    try {
+      const missingSubTokens = await this.createManySubTokensIfMissing(access);
+      if (missingSubTokens.length > 0) {
+        //retrieveToken neo created
+        access = await this.findManyWithAppsByUserTrimmed(user.id);
+      }
+
+      access.forEach((item) => {
+        //we choose a property name of sub to hold our userId value to be consistent with JWT standards
+        const appTokenContent: AppTokenContentEntity = {
+          sub: user.id,
+          role: user.role,
+          appId: item.appId,
+          subTokenUuid: item.subTokens[0]?.id,
+        };
+        const baseURL = item.application.baseURL;
+        const appToken = this.jwtService.sign(appTokenContent);
+        const accessUrlTokenized = `${baseURL}?appToken=${appToken}`;
+        item.subTokens[0].accessUrlTokenized = accessUrlTokenized;
+      });
+    } catch (error) {
+      this.logger.error(error);
+    }
+    return access;
+  }
+
   async createSubToken(subscriptionId: number): Promise<SubToken> {
     let subToken: SubToken;
     try {
@@ -111,6 +146,11 @@ export class SubsService {
     return subToken;
   }
 
+  /**
+   *
+   * @param subscriptionsId array of the subId for which it will be created a subToken
+   * @returns number of subToken added to the db
+   */
   async createManySubTokens(subscriptionsId: number[]): Promise<number> {
     try {
       const data: { subscriptionId: number }[] = [];
@@ -125,6 +165,25 @@ export class SubsService {
     } catch (error) {
       this.logger.error(error);
     }
+  }
+
+  /**
+   * If an user does not have a token to access to an app whereas he has subscribed to it
+   * a token (sub token) will be added to the db
+   * @param subs can be generated with findManyWithAppsByUser
+   * @returns subscriptionId[] which have been added to the db
+   */
+  async createManySubTokensIfMissing(
+    subs: AccessEntityDetails[],
+  ): Promise<number[]> {
+    const subsToAddToken: number[] = [];
+    subs.forEach((element) => {
+      if (element.subTokens.length < 1) subsToAddToken.push(element.id);
+    });
+    if (subsToAddToken.length > 1) {
+      await this.createManySubTokens(subsToAddToken);
+    }
+    return subsToAddToken;
   }
 
   async findManySubTokens(subscriptionsId: number[]): Promise<SubToken[]> {
@@ -261,9 +320,10 @@ export class SubsService {
   }
 
   /**
-   * Allow to list all the subscriptions of the given user with the detail of the associated application and the save token to get in.
-   * @param userId
-   * @returns
+   * Allow to list all the subscriptions of the given user
+   * with the detail of the associated application
+   * and the saved tokens to access to it.
+   * @returns including the full list of subTokens
    */
   async findManyWithAppsByUser(userId: number): Promise<AccessEntityDetails[]> {
     let result;
@@ -280,6 +340,35 @@ export class SubsService {
         },
       };
       result = await this.prisma.subscription.findMany(criteria);
+      //renaming applications attribute to application as it is not an array
+      result = result.map(({ applications: application, ...res }) => ({
+        application,
+        ...res,
+      }));
+    } catch (error) {
+      this.logger.error(error);
+    }
+    return result;
+  }
+
+  /**
+   * Allow to list all the subscriptions of the given user
+   * with the detail of the associated application
+   * and the saved tokens to access to it.
+   * @returns including a list of subTokens with only one element
+   */
+  async findManyWithAppsByUserTrimmed(
+    userId: number,
+  ): Promise<AccessEntityDetails[]> {
+    let result: AccessEntityDetails[];
+    try {
+      result = await this.findManyWithAppsByUser(userId);
+      result.forEach((element) => {
+        if (element.subTokens.length > 1) {
+          const lastItem = element.subTokens.pop();
+          element.subTokens = [lastItem];
+        }
+      });
     } catch (error) {
       this.logger.error(error);
     }
