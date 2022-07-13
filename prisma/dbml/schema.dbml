@@ -36,14 +36,16 @@ Table users {
 
 Table tokens {
   id String [pk]
+  createdAt DateTime [default: `now()`, not null]
   userId Int [not null]
-  User users
+  User users [not null]
 }
 
 Table sub_tokens {
   id String [pk]
+  createdAt DateTime [default: `now()`, not null]
   subscriptionId Int [not null]
-  Subscription subscriptions
+  Subscription subscriptions [not null]
 }
 
 Enum Role {

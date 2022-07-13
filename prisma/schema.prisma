@@ -67,18 +67,20 @@ enum Role {
 
 // To allowed interactions with this app
 model Token {
-  id     String @id @default(uuid())
-  userId Int    @map("user_id")
-  User   User?  @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  userId    Int      @map("user_id")
+  User      User     @relation(fields: [userId], references: [id])
 
   @@map("tokens")
 }
 
 // To allowed interactions with the subscribed other applications
 model SubToken {
-  id             String        @id @default(uuid())
-  subscriptionId Int           @map("subscription_id")
-  Subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+  id             String       @id @default(uuid())
+  createdAt      DateTime     @default(now()) @map("created_at")
+  subscriptionId Int          @map("subscription_id")
+  Subscription   Subscription @relation(fields: [subscriptionId], references: [id])
 
   @@map("sub_tokens")
 }

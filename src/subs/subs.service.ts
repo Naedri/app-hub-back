@@ -338,9 +338,13 @@ export class SubsService {
             equals: userId,
           },
         },
+        orderBy: {
+          applications: { name: 'asc' },
+        },
         include: {
-          applications: true,
-          subTokens: true,
+          subTokens: {
+            orderBy: { createdAt: 'asc' },
+          },
         },
       };
       result = await this.prisma.subscription.findMany(criteria);
