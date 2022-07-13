@@ -3,6 +3,7 @@ import { Application, Prisma } from '@prisma/client';
 type IApp = Application;
 
 export class AppEntity implements IApp {
+  isPublic: boolean;
   id: number;
   name: string;
   landingPage: string;
@@ -13,6 +14,7 @@ export class AppEntity implements IApp {
 type IAppNoUrl = Omit<AppEntity, 'baseURL'>;
 
 export class AppDiscoverEntity implements IAppNoUrl {
+  isPublic: boolean;
   id: number;
   name: string;
   landingPage: string;

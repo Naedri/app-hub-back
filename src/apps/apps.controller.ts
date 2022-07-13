@@ -25,12 +25,12 @@ export class AppsController {
 
   @Get('discover')
   discover(): Promise<AppDiscoverEntity[]> {
-    return this.appsService.discoverAll();
+    return this.appsService.discoverAllTrimmed();
   }
 
   @Get('discover/:id')
   discoverOne(@Param('id') id: string): Promise<AppDiscoverEntity> {
-    return this.appsService.discoverOne(+id);
+    return this.appsService.discoverOneTrimmed(+id);
   }
 
   @Get()

@@ -26,6 +26,7 @@ model Application {
   landingPage   String?        @db.VarChar
   description   Json?          @db.Json
   baseURL       String?        @db.VarChar
+  isPublic      Boolean        @default(false)
   subscriptions Subscription[]
 
   @@map("applications")
