@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AppsModule } from './apps/apps.module';
 import { SubsModule } from './subs/subs.module';
+import { SubTokensModule } from './sub-tokens/sub-tokens.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { SubsModule } from './subs/subs.module';
     UsersModule,
     AppsModule,
     SubsModule,
+    SubTokensModule,
   ],
   controllers: [AppController],
   providers: [Logger, AppService],
