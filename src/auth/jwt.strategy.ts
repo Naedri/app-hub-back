@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -25,8 +25,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'my-jwt') {
   constructor(
     private readonly configService: ConfigService,
     private readonly authService: AuthService,
+    private readonly logger: Logger,
   ) {
     super(strategyFactory(configService));
+    this.logger = new Logger(this.constructor.name);
   }
 
   /**
@@ -36,14 +38,22 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'my-jwt') {
    * @returns a full user if the validation succeeds, or a null if it fails
    */
   async validate(payload: TokenContentEntity): Promise<UserOneAuthEntity> {
-    const user = await this.authService.validateUser(
-      payload.sub,
-      payload.role,
-      payload.tokenUuid,
-    );
-    if (!user) {
-      throw new UnauthorizedException();
+    try {
+      const user = await this.authService.validateUser(
+        payload.sub,
+        payload.role,
+        payload.tokenUuid,
+      );
+      if (!user) {
+        throw new UnauthorizedException(
+          `User with the following content payload is invalid :  ${JSON.stringify(
+            payload,
+          )} . `,
+        );
+      }
+      return { ...user, tokenUuid: payload.tokenUuid };
+    } catch (error) {
+      this.logger.error(error);
     }
-    return { ...user, tokenUuid: payload.tokenUuid };
   }
 }

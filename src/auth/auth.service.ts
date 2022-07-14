@@ -96,6 +96,9 @@ export class AuthService {
     tokenUuid: string,
   ): Promise<UserOneAuthEntity> {
     const user = await this.userService.getById(id);
+    if (!user) {
+      throw new UnauthorizedException(`User with id : ${id} not found.`);
+    }
     if (user.role !== role) {
       throw new UnauthorizedException(
         `User with id : ${user.id} used a token with an outdated role, it was : ${role} instead of ${user.role}.`,
