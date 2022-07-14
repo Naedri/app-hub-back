@@ -19,17 +19,18 @@ export class AccessEntity implements IAccess {
 interface ISubTokenWithData extends SubToken {
   accessUrlTokenized?: string;
 }
-type IAccessDetails = Subscription & {
-  application: Application;
-  subTokens: ISubTokenWithData[];
+type IAccessDetails = IAccess & {
+  application?: Application;
+  subTokens?: ISubTokenWithData[];
 };
 export class AccessEntityDetails implements IAccessDetails {
-  id: number;
+  subId: number;
   appId: number;
   userId: number;
-  application: Application;
-  subTokens: ISubTokenWithData[];
+  application?: Application;
+  subTokens?: ISubTokenWithData[];
 }
+
 /**
  * Subscription entity
  */

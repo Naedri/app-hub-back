@@ -5,6 +5,7 @@ import { RolesGuard } from 'src/roles/guards/roles.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'nestjs-prisma';
+import { SubTokensService } from 'src/sub-tokens/sub-tokens.service';
 
 const jwtFactory = {
   useFactory: async (configService: ConfigService) => ({
@@ -19,6 +20,6 @@ const jwtFactory = {
 @Module({
   imports: [JwtModule.registerAsync(jwtFactory)],
   controllers: [SubsController],
-  providers: [Logger, SubsService, Logger, RolesGuard, PrismaService],
+  providers: [Logger, SubsService, RolesGuard, PrismaService, SubTokensService],
 })
 export class SubsModule {}

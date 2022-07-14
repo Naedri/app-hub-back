@@ -21,11 +21,7 @@ import {
   UserOneAuthEntity,
 } from 'src/users/entities/user-auth.entity';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
-import {
-  SubNoUserEntity,
-  AccessEntity,
-  AccessEntityDetails,
-} from './entities/sub.entity';
+import { SubNoUserEntity, AccessEntityDetails } from './entities/sub.entity';
 
 @Controller('subs')
 @ApiTags('subs')
@@ -34,50 +30,53 @@ import {
 export class SubsController {
   constructor(private readonly subsService: SubsService) {}
 
-  @Get('access')
+  @Get('myaccess')
   @Roles(Role.CLIENT)
   myAccesses(
     @AuthUser() user: UserOneAuthEntity,
   ): Promise<AccessEntityDetails[]> {
-    return this.subsService.getAccess(user);
+    return this.subsService.getUserSubsWithApps(+user.id);
   }
 
-  @Get('refreshAccess/:userId')
-  @Roles(Role.ADMIN)
-  myRefreshAccesses(@Param('userId') userId: number): Promise<AccessEntity[]> {
-    return this.subsService.getUserRefreshAccess(userId);
-  }
-
-  @Get('refreshAccess/:userId/:subId')
-  @Roles(Role.ADMIN)
-  async myRefreshAccess(
-    @Param('userId') userId: number,
-    @Param('subId') subId: number,
-  ): Promise<AccessEntity> {
-    return (await this.subsService.getUserRefreshAccess(userId, +subId))?.pop();
-  }
-
-  @Get('sub')
+  @Get('myaccess/:id')
   @Roles(Role.CLIENT)
-  mySubscriptions(
-    @AuthUser() user: UserNotAuthEntity,
-  ): Promise<SubNoUserEntity[]> {
-    return this.subsService.getUserSubs(user.id);
+  async myAccess(
+    @AuthUser() user: UserOneAuthEntity,
+    @Param('id') subId: number,
+  ): Promise<AccessEntityDetails> {
+    return (
+      await this.subsService.getUserSubsWithApps(+user.id, [+subId])
+    )?.pop();
   }
 
-  @Get('sub/:id')
+  @Get('myaccess/url/:appId')
   @Roles(Role.CLIENT)
-  async mySubscription(
+  myAccessUrl(
+    @AuthUser() user: UserOneAuthEntity,
+    @Param('appId') appId: number,
+  ): Promise<string> {
+    return this.subsService.getAccessUrl(+user.id, +appId);
+  }
+
+  @Get('me')
+  @Roles(Role.CLIENT)
+  mySubs(@AuthUser() user: UserNotAuthEntity): Promise<SubNoUserEntity[]> {
+    return this.subsService.getUserSubs(+user.id);
+  }
+
+  @Get('me/:id')
+  @Roles(Role.CLIENT)
+  async mySub(
     @AuthUser() user: UserNotAuthEntity,
     @Param('id') subId: number,
   ): Promise<SubNoUserEntity> {
-    return (await this.subsService.getUserSubs(user.id, +subId))?.pop();
+    return (await this.subsService.getUserSubs(+user.id, [+subId]))?.pop();
   }
 
   @Get('user/:id')
   @Roles(Role.ADMIN)
-  userSubscriptions(@Param('id') id: number): Promise<SubNoUserEntity[]> {
-    return this.subsService.getUserSubs(+id);
+  getUserSubs(@Param('id') userId: number): Promise<SubNoUserEntity[]> {
+    return this.subsService.getUserSubs(+userId);
   }
 
   @Post()
