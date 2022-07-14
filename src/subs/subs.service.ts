@@ -1,6 +1,5 @@
 import {
   Injectable,
-  InternalServerErrorException,
   Logger,
   ServiceUnavailableException,
   UnauthorizedException,
@@ -9,16 +8,10 @@ import { Prisma, Role, Subscription } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
-import {
-  AccessEntity,
-  AccessEntityDetails,
-  SubNoUserEntity,
-} from './entities/sub.entity';
+import { AccessEntityDetails, SubNoUserEntity } from './entities/sub.entity';
 import { AppTokenContentEntity } from 'src/auth/entities/token.entity';
 import { JwtService } from '@nestjs/jwt';
-import { UserOneAuthEntity } from 'src/users/entities/user-auth.entity';
 import { SubTokensService } from 'src/sub-tokens/sub-tokens.service';
-import { throwError } from 'rxjs';
 
 @Injectable()
 export class SubsService {
@@ -255,12 +248,16 @@ export class SubsService {
     subWithApp: any,
   ): AccessEntityDetails {
     //renaming id attribute (of the subscription) to subId for better understanding
-    subWithApp.subId = subWithApp.id;
-    delete subWithApp.id;
+    subWithApp.subId = subWithApp?.id;
+    delete subWithApp?.id;
     //renaming applications attribute to application as it is not an array
-    const access: AccessEntityDetails = undefined;
+    const access: AccessEntityDetails = {
+      subId: 0,
+      appId: 0,
+      userId: 0,
+    };
     delete Object.assign(access, subWithApp, {
-      application: subWithApp.applications,
+      application: subWithApp?.applications,
     })['applications'];
     return access;
   }

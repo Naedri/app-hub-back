@@ -51,11 +51,13 @@ export class SubsController {
 
   @Get('myaccess/url/:appId')
   @Roles(Role.CLIENT)
-  myAccessUrl(
+  async myAccessUrl(
     @AuthUser() user: UserOneAuthEntity,
     @Param('appId') appId: number,
-  ): Promise<string> {
-    return this.subsService.getAccessUrl(+user.id, +appId);
+  ): Promise<{ accessUrlTokenized: string }> {
+    return {
+      accessUrlTokenized: await this.subsService.getAccessUrl(+user.id, +appId),
+    };
   }
 
   @Get('me')
