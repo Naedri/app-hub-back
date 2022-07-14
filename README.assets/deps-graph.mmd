@@ -32,4 +32,8 @@ graph LR
     SubsModule --> ConfigModule;
     SubsModule --> ConfigHostModule;
     SubsModule --> PrismaModule;
+    AppModule --> SubTokensModule;
+    SubTokensModule --> ConfigModule;
+    SubTokensModule --> ConfigHostModule;
+    SubTokensModule --> PrismaModule;
     AppModule --> ConfigHostModule;
