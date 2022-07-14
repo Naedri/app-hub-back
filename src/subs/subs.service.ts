@@ -1,4 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  ServiceUnavailableException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Prisma, Role, Subscription } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateSubDto } from './dto/create-sub.dto';
@@ -12,6 +18,7 @@ import { AppTokenContentEntity } from 'src/auth/entities/token.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UserOneAuthEntity } from 'src/users/entities/user-auth.entity';
 import { SubTokensService } from 'src/sub-tokens/sub-tokens.service';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class SubsService {
@@ -186,43 +193,56 @@ export class SubsService {
     appId: number,
     role = Role.CLIENT,
   ): Promise<string> {
-    let accessUrlTokenized: string;
+    try {
+      let accessUrlTokenized: string;
 
-    const criteria: Prisma.SubscriptionFindFirstArgs = {
-      where: {
-        userId: {
-          equals: userId,
+      const criteria: Prisma.SubscriptionFindFirstArgs = {
+        where: {
+          userId: {
+            equals: userId,
+          },
+          appId: {
+            equals: appId,
+          },
         },
-        appId: {
-          equals: appId,
+        include: {
+          applications: true,
         },
-      },
-      include: {
-        applications: true,
-      },
-      orderBy: {
-        applications: { name: 'asc' },
-      },
-    };
-    const result: any = await this.prisma.subscription.findFirst(criteria);
-    if (result !== null) {
-      const access: AccessEntityDetails =
-        this.subscriptionWithAppsToAccessEntityDetails(result);
-
-      const subToken = await this.subTokensService.create(access.subId);
-      //we choose a property name of sub to hold our userId value to be consistent with JWT standards
-      const appTokenContent: AppTokenContentEntity = {
-        sub: access.userId,
-        subId: access.subId,
-        role: role,
-        appId: access.appId,
-        subTokenUuid: subToken?.id,
+        orderBy: {
+          applications: { name: 'asc' },
+        },
       };
-      const baseURL = access.application.baseURL;
-      const appToken = this.jwtService.sign(appTokenContent);
-      accessUrlTokenized = `${baseURL}?appToken=${appToken}`;
+      const result: any = await this.prisma.subscription.findFirst(criteria);
+      if (result !== null) {
+        const access: AccessEntityDetails =
+          this.subscriptionWithAppsToAccessEntityDetails(result);
+
+        const subToken = await this.subTokensService.create(access.subId);
+        if (!subToken?.id) {
+          throw new ServiceUnavailableException(
+            `Subscription app token was not created for the following subscription id: ${access.subId}`,
+          );
+        }
+        //we choose a property name of sub to hold our userId value to be consistent with JWT standards
+        const appTokenContent: AppTokenContentEntity = {
+          sub: access.userId,
+          subId: access.subId,
+          role: role,
+          appId: access.appId,
+          subTokenUuid: subToken?.id,
+        };
+        const baseURL = access.application.baseURL;
+        const appToken = this.jwtService.sign(appTokenContent);
+        accessUrlTokenized = `${baseURL}?appToken=${appToken}`;
+      } else {
+        throw new UnauthorizedException(
+          `User with id : ${userId} is not allowed to access to the application with id : ${appId}.`,
+        );
+      }
+      return accessUrlTokenized;
+    } catch (error) {
+      this.logger.error(error);
     }
-    return accessUrlTokenized;
   }
 
   /**
