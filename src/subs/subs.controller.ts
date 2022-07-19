@@ -21,7 +21,11 @@ import {
   UserOneAuthEntity,
 } from 'src/users/entities/user-auth.entity';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
-import { SubNoUserEntity, AccessEntityDetails } from './entities/sub.entity';
+import {
+  SubNoUserEntity,
+  AccessEntityDetails,
+  AccessUrlEntity,
+} from './entities/sub.entity';
 
 @Controller('subs')
 @ApiTags('subs')
@@ -54,7 +58,7 @@ export class SubsController {
   async myAccessUrl(
     @AuthUser() user: UserOneAuthEntity,
     @Param('appId') appId: number,
-  ): Promise<{ accessUrlTokenized: string }> {
+  ): Promise<AccessUrlEntity> {
     return {
       accessUrlTokenized: await this.subsService.getAccessUrl(+user.id, +appId),
     };
