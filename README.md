@@ -114,27 +114,53 @@ docker compose up
 
 ## References
 
-- NestJS :
-  - [authentication](https://docs.nestjs.com/security/authentication)
-  - [authorization](https://docs.nestjs.com/security/authorization)
-  - [configuration](https://docs.nestjs.com/techniques/configuration)
-  - [prisma-client-in-your-nestjs-services](https://docs.nestjs.com/recipes/prisma#use-prisma-client-in-your-nestjs-services)
-  - CLI :
-    - [Introducing CLI Resource Generators](https://trilon.io/blog/introducing-cli-generators-crud-api-in-1-minute#Introduction-to-CLI-Generators)
-  - practical :
-    - [Building a REST API with NestJS and Prisma](https://www.notion.so/marcjulian/Building-a-REST-API-with-NestJS-and-Prisma-8296846a0fc54ac0b445ae9364805669)
-    - [nestjs-prisma-workshop](https://github.com/marcjulian/nestjs-prisma-workshop)
-- Token :
-  - [JWT](https://jwt.io/)
-  - [Learning JWT](https://github.com/dwyl/learn-json-web-tokens)
-  - [Credentials in JWT](https://stackoverflow.com/questions/42652695/is-it-ok-to-store-user-credentials-in-the-jwt/42652851#42652851)
-- Database :
-  - [Prisma schema reference - Naming Convention](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#naming-conventions)
-  - [SQL Style Guide](https://www.sqlstyle.guide)
-  - [Table Definition](https://www.dbml.org/docs/#table-definition)
-  - [dbDiagram Docs](https://dbdiagram.io/docs/)
-- Docker
-  - [Containers vs. virtual machines | Atlassian](https://www.atlassian.com/en/continuous-delivery/microservices/containers)
-  - [Best practices for writing Docker files](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
-  - [Docker Nodejs Tutorial](https://docs.docker.com/language/nodejs/)
-  - [Example](https://github.com/notiz-dev/nestjs-prisma/blob/main/schematics/nestjs-prisma/templates/docker/common/Dockerfile)
+### NestJS
+
+The backend application has been developped with NestJS. It is a progressive Node.js framework for building efficient, reliable and scalable server-side applications. As this framework supports as well development in TS, we choose these typed language as a safety harness.
+Useful documentations are available at the following links :
+
+- [authentication](https://docs.nestjs.com/security/authentication)
+- [authorization](https://docs.nestjs.com/security/authorization)
+- [configuration](https://docs.nestjs.com/techniques/configuration)
+- [prisma-client-in-your-nestjs-services](https://docs.nestjs.com/recipes/prisma#use-prisma-client-in-your-nestjs-services)
+
+#### CLI
+
+NestJs CLI offers a bunch of command to ease developpers' works.
+Useful documentations are available at the following links :
+
+- [Introducing CLI Resource Generators](https://trilon.io/blog/introducing-cli-generators-crud-api-in-1-minute#Introduction-to-CLI-Generators)
+
+#### Practical examples
+
+- [Building a REST API with NestJS and Prisma](https://www.notion.so/marcjulian/Building-a-REST-API-with-NestJS-and-Prisma-8296846a0fc54ac0b445ae9364805669)
+- [nestjs-prisma-workshop](https://github.com/marcjulian/nestjs-prisma-workshop)
+
+### Token
+
+Authentification of the user is supported by JWON Web Token (JWT). 
+Useful documentations are available at the following links :
+
+- [JWT ](https://jwt.io/)
+- [Learning JWT](https://github.com/dwyl/learn-json-web-tokens)
+- [Credentials in JWT](https://stackoverflow.com/questions/42652695/is-it-ok-to-store-user-credentials-in-the-jwt/42652851#42652851)
+
+### Database
+
+The interaction with the database is supported by a TypeScript ORM (Object–relational mapping) : Prisma.
+Useful documentations are available at the following links :
+
+- [Prisma schema reference - Naming Convention](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#naming-conventions)
+- [SQL Style Guide](https://www.sqlstyle.guide)
+- [Table Definition](https://www.dbml.org/docs/#table-definition)
+- [dbDiagram Docs](https://dbdiagram.io/docs/)
+
+### Docker
+
+To ease the deployment of our application, it has been drafted docker files. They have not been tested yet due to a lack of CPU ressources of the current developper's computer.
+Useful documentations are available at the following links :
+
+- [Containers vs. virtual machines | Atlassian](https://www.atlassian.com/en/continuous-delivery/microservices/containers)
+- [Best practices for writing Docker files](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+- [Docker Nodejs Tutorial](https://docs.docker.com/language/nodejs/)
+- [Example](https://github.com/notiz-dev/nestjs-prisma/blob/main/schematics/nestjs-prisma/templates/docker/common/Dockerfile)
