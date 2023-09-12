@@ -1,14 +1,22 @@
-# AppHub backend
-
 <p align="center">
-  <a href="https://www.typescriptlang.org/" target="blank"><img src="https://static.npmjs.com/255a118f56f5346b97e56325a1217a16.svg" width="100" alt="TypeScript Logo" /></a>
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="100" alt="Nest Logo" /></a>
-  <a href="https://www.prisma.io/" target="blank"><img src="https://website-v9.vercel.app/logo-dark.svg" width="100" alt="Prisma Logo" /></a>
+  <a alt="TypeScript Logo" href="https://www.typescriptlang.org/" target="blank">
+    <img src="https://static.npmjs.com/255a118f56f5346b97e56325a1217a16.svg" width="60"/>
+  </a>
+  <a alt="Nest Logo"  href="http://nestjs.com/" target="blank">
+    <img src="https://nestjs.com/img/logo-small.svg" width="60"/>
+  </a>
+  <a alt="Prisma Logo" href="https://www.prisma.io/" target="blank">
+    <img src="https://prismalens.vercel.app/header/logo-dark.svg" width="60"/>
+  </a>
 </p>
+
+<h2 align="center">
+  Backend AppHub build in TypeScript with NestJS and Prisma. 
+</h2>
 
 ## Description
 
-"app-hub-back" is the back-end component of the App Hub project, developed using NestJS. This repository serves as the engine behind the scenes, handling authentication, data storage, and communication with the front-end. It provides the necessary APIs and services for managing the application catalog, user accounts, and secure connections. 
+"app-hub-back" is the back-end component of the App Hub project, developed using NestJS. This repository serves as the engine behind the scenes, handling authentication, data storage, and communication with the front-end. It provides the necessary APIs and services for managing the application catalog, user accounts, and secure connections.
 
 ## Installation
 
@@ -138,7 +146,7 @@ Useful documentations are available at the following links :
 
 ### Token
 
-Authentification of the user is supported by JWON Web Token (JWT). 
+Authentification of the user is supported by JWON Web Token (JWT).
 Useful documentations are available at the following links :
 
 - [JWT ](https://jwt.io/)
