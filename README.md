@@ -1,4 +1,4 @@
-# ms-users-back
+# AppHub backend
 
 <p align="center">
   <a href="https://www.typescriptlang.org/" target="blank"><img src="https://static.npmjs.com/255a118f56f5346b97e56325a1217a16.svg" width="100" alt="TypeScript Logo" /></a>
@@ -8,7 +8,7 @@
 
 ## Description
 
-To manage access to protected url of applications from your amazing company.
+"app-hub-back" is the back-end component of the App Hub project, developed using NestJS. This repository serves as the engine behind the scenes, handling authentication, data storage, and communication with the front-end. It provides the necessary APIs and services for managing the application catalog, user accounts, and secure connections. 
 
 ## Installation
 
