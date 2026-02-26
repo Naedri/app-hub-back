@@ -1,22 +1,22 @@
 <p align="center">
   <a alt="TypeScript Logo" href="https://www.typescriptlang.org/" target="blank">
-    <img src="https://static.npmjs.com/255a118f56f5346b97e56325a1217a16.svg" width="60"/>
+    <img src="https://static.npmjs.com/255a118f56f5346b97e56325a1217a16.svg" height="60"/>
   </a>
   <a alt="Nest Logo"  href="http://nestjs.com/" target="blank">
-    <img src="https://nestjs.com/img/logo-small.svg" width="60"/>
+    <img src="https://nestjs.com/img/logo-small.svg" height="60"/>
   </a>
   <a alt="Prisma Logo" href="https://www.prisma.io/" target="blank">
-    <img src="https://prismalens.vercel.app/header/logo-dark.svg" width="60"/>
+    <img src="https://www.prisma.io/logo-dark.svg" height="60"/>
   </a>
 </p>
 
 <h2 align="center">
-  Backend AppHub build in TypeScript with NestJS and Prisma. 
+  Backend AppHub build in TypeScript with NestJS and Prisma.
 </h2>
 
 ## Description
 
-"app-hub-back" is the back-end component of the App Hub project, developed using NestJS. This repository serves as the engine behind the scenes, handling authentication, data storage, and communication with the front-end. It provides the necessary APIs and services for managing the application catalog, user accounts, and secure connections.
+"app-hub-back" is the back-end for ["app-hub-front"](https://github.com/Naedri/app-hub-front), built with NestJS. It handles authentication, data storage, and API services for managing the applications catalog, user accounts, and secure front-end communication.
 
 ## Installation
 
@@ -149,7 +149,7 @@ Useful documentations are available at the following links :
 Authentification of the user is supported by JWON Web Token (JWT).
 Useful documentations are available at the following links :
 
-- [JWT ](https://jwt.io/)
+- [JWT](https://jwt.io/)
 - [Learning JWT](https://github.com/dwyl/learn-json-web-tokens)
 - [Credentials in JWT](https://stackoverflow.com/questions/42652695/is-it-ok-to-store-user-credentials-in-the-jwt/42652851#42652851)
 
