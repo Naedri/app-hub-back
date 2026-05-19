@@ -1,22 +1,12 @@
-<p align="center">
-  <a alt="TypeScript Logo" href="https://www.typescriptlang.org/" target="blank">
-    <img src="https://static.npmjs.com/255a118f56f5346b97e56325a1217a16.svg" height="60"/>
-  </a>
-  <a alt="Nest Logo"  href="http://nestjs.com/" target="blank">
-    <img src="https://nestjs.com/img/logo-small.svg" height="60"/>
-  </a>
-  <a alt="Prisma Logo" href="https://www.prisma.io/" target="blank">
-    <img src="https://www.prisma.io/logo-dark.svg" height="60"/>
-  </a>
-</p>
+# Backend AppHub build in TypeScript with NestJS and Prisma.
 
-<h2 align="center">
-  Backend AppHub build in TypeScript with NestJS and Prisma.
-</h2>
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff)](https://www.typescriptlang.org/)
+[![Nest](https://img.shields.io/badge/Nest.js-%23E0234E.svg?logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
 
 ## Description
 
-"app-hub-back" is the back-end for ["app-hub-front"](https://github.com/Naedri/app-hub-front), built with NestJS. It handles authentication, data storage, and API services for managing the applications catalog, user accounts, and secure front-end communication.
+"app-hub-back" is the back-end for "[app-hub-front"](https://github.com/Naedri/app-hub-front)", built with NestJS. It handles authentication, data storage, and API services for managing the applications catalog, user accounts, and secure front-end communication.
 
 ## Installation
 
