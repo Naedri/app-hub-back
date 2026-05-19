@@ -6,7 +6,7 @@
 
 ## Description
 
-"app-hub-back" is the back-end for "[app-hub-front"](https://github.com/Naedri/app-hub-front)", built with NestJS. It handles authentication, data storage, and API services for managing the applications catalog, user accounts, and secure front-end communication.
+"app-hub-back" is the back-end for "[app-hub-front](https://github.com/Naedri/app-hub-front)", built with NestJS. It handles authentication, data storage, and API services for managing the applications catalog, user accounts, and secure front-end communication.
 
 ## Installation
 
